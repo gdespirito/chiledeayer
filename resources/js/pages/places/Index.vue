@@ -117,9 +117,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         v-else
                         class="flex aspect-[4/3] items-center justify-center bg-muted"
                     >
-                        <MapPin
-                            class="size-8 text-muted-foreground/40"
-                        />
+                        <MapPin class="size-8 text-muted-foreground/40" />
                     </div>
 
                     <div class="space-y-1 p-4">

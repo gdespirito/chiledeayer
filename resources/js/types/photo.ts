@@ -80,6 +80,8 @@ export type Photo = {
     tags: Tag[];
     persons?: Person[];
     comparisons?: ComparisonPhoto[];
+    tags_count?: number;
+    comments_count?: number;
     upvotes_count: number;
     downvotes_count: number;
     score: number;

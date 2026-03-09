@@ -65,10 +65,7 @@ function vote(value: 1 | -1): void {
     <div
         class="group overflow-hidden rounded-xl border border-sidebar-border/70 bg-card shadow-sm transition-shadow hover:shadow-md dark:border-sidebar-border"
     >
-        <Link
-            :href="photosShow(props.photo.id)"
-            class="block"
-        >
+        <Link :href="photosShow(props.photo.id)" class="block">
             <div class="relative aspect-[4/3] overflow-hidden bg-muted">
                 <img
                     v-if="getThumbnail(props.photo)"
@@ -101,7 +98,7 @@ function vote(value: 1 | -1): void {
                 </div>
             </div>
         </Link>
-        <div class="flex items-center gap-1 px-4 pb-3 pt-2">
+        <div class="flex items-center gap-1 px-4 pt-2 pb-3">
             <button
                 type="button"
                 class="flex items-center gap-0.5 rounded-md px-1.5 py-1 text-xs transition-colors hover:bg-stone-100 dark:hover:bg-stone-800"

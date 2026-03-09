@@ -234,9 +234,7 @@ const exploreLinks = [
                             <p
                                 class="text-lg leading-relaxed font-medium lg:text-xl"
                             >
-                                {{
-                                    props.photoOfTheDay.data.description
-                                }}
+                                {{ props.photoOfTheDay.data.description }}
                             </p>
                             <div
                                 class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground"
@@ -246,19 +244,24 @@ const exploreLinks = [
                                     class="flex items-center gap-1"
                                 >
                                     <MapPin class="size-3.5" />
-                                    {{
-                                        props.photoOfTheDay.data.place.name
-                                    }}
+                                    {{ props.photoOfTheDay.data.place.name }}
                                 </span>
                                 <span>&middot;</span>
-                                <span>~{{ props.photoOfTheDay.data.year_from }}</span>
+                                <span
+                                    >~{{
+                                        props.photoOfTheDay.data.year_from
+                                    }}</span
+                                >
                             </div>
                             <div
                                 v-if="props.photoOfTheDay.data.tags.length > 0"
                                 class="flex flex-wrap gap-1.5"
                             >
                                 <span
-                                    v-for="tag in props.photoOfTheDay.data.tags.slice(0, 5)"
+                                    v-for="tag in props.photoOfTheDay.data.tags.slice(
+                                        0,
+                                        5,
+                                    )"
                                     :key="tag.id"
                                     class="rounded-full bg-stone-100 px-2.5 py-0.5 text-xs text-stone-600 dark:bg-stone-800 dark:text-stone-400"
                                 >
