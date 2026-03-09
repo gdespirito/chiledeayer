@@ -50,14 +50,16 @@ class ProcessPhotoUpload implements ShouldQueue
 
         [$originalWidth, $originalHeight] = $imageInfo;
 
-        $this->photo->files()->create([
-            'variant' => 'original',
-            'path' => $this->originalPath,
-            'disk' => 's3',
-            'width' => $originalWidth,
-            'height' => $originalHeight,
-            'size' => $disk->size($this->originalPath),
-        ]);
+        $this->photo->files()->firstOrCreate(
+            ['variant' => 'original'],
+            [
+                'path' => $this->originalPath,
+                'disk' => 's3',
+                'width' => $originalWidth,
+                'height' => $originalHeight,
+                'size' => $disk->size($this->originalPath),
+            ],
+        );
 
         $mimeType = $imageInfo['mime'];
         $filename = basename($this->originalPath);
@@ -195,14 +197,16 @@ class ProcessPhotoUpload implements ShouldQueue
             $disk = Storage::disk('s3');
             $disk->put($variantPath, $variantContents);
 
-            $this->photo->files()->create([
-                'variant' => $variant,
-                'path' => $variantPath,
-                'disk' => 's3',
-                'width' => $newWidth,
-                'height' => $newHeight,
-                'size' => $disk->size($variantPath),
-            ]);
+            $this->photo->files()->firstOrCreate(
+                ['variant' => $variant],
+                [
+                    'path' => $variantPath,
+                    'disk' => 's3',
+                    'width' => $newWidth,
+                    'height' => $newHeight,
+                    'size' => $disk->size($variantPath),
+                ],
+            );
         } catch (\Throwable $e) {
             Log::error("ProcessPhotoUpload: failed to generate {$variant} variant", [
                 'photo_id' => $this->photo->id,
