@@ -27,6 +27,7 @@ class Place extends Model
         'country',
         'region',
         'city',
+        'verified',
     ];
 
     /**
@@ -40,6 +41,7 @@ class Place extends Model
             'bounding_box' => 'array',
             'latitude' => 'float',
             'longitude' => 'float',
+            'verified' => 'boolean',
         ];
     }
 
