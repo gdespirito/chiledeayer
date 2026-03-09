@@ -222,6 +222,30 @@ const exploreLinks = [
                 </div>
             </section>
 
+            <!-- Collaborate banner -->
+            <section v-if="isGuest" class="px-4 pb-12 lg:px-8">
+                <div class="mx-auto max-w-6xl">
+                    <Link
+                        href="/contribuir"
+                        class="flex items-center justify-between gap-4 rounded-lg border border-amber-200/70 bg-amber-50/50 px-5 py-3 transition-colors hover:bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/20 dark:hover:bg-amber-950/30"
+                    >
+                        <div class="flex items-center gap-3">
+                            <Star class="size-5 shrink-0 text-amber-500" />
+                            <p
+                                class="text-sm text-stone-700 dark:text-stone-300"
+                            >
+                                <span class="font-medium">
+                                    Colabora y gana puntos:
+                                </span>
+                                sube fotos (+10), agrega lugares (+5), comenta
+                                (+3) y más
+                            </p>
+                        </div>
+                        <ArrowRight class="size-4 shrink-0 text-amber-500" />
+                    </Link>
+                </div>
+            </section>
+
             <!-- Photo of the Day -->
             <section v-if="props.photoOfTheDay" class="px-4 pb-12 lg:px-8">
                 <div class="mx-auto max-w-6xl">
