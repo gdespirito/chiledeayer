@@ -1,30 +1,48 @@
 <script setup lang="ts">
-import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import {
     Calendar,
     Camera,
     ImagePlus,
     MapPin,
+    MessageCircle,
     Tag as TagIcon,
+    ThumbsDown,
+    ThumbsUp,
+    Trash2,
     User,
 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { login, register } from '@/routes';
+import { destroy as commentsDestroy } from '@/routes/comments';
 import { index as photosIndex, show as photosShow } from '@/routes/photos';
+import { store as commentsStore } from '@/routes/photos/comments';
 import { store as comparisonsStore } from '@/routes/photos/comparisons';
-import type { BreadcrumbItem, ComparisonPhoto, Photo } from '@/types';
+import { store as voteStore } from '@/routes/photos/vote';
+import type { BreadcrumbItem, Comment, ComparisonPhoto, Photo } from '@/types';
 
 type Props = {
     photo: { data: Photo };
+    comments: { data: Comment[] };
 };
 
 const props = defineProps<Props>();
 const photo = computed(() => props.photo.data);
+const comments = computed(() => props.comments.data);
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
@@ -151,6 +169,86 @@ const userHasComparison = computed(() => {
         (c) => c.user.id === auth.value.user.id,
     );
 });
+
+// Voting
+const isVoting = ref(false);
+
+function vote(value: 1 | -1): void {
+    isVoting.value = true;
+    router.post(
+        voteStore.url(photo.value.id),
+        { value },
+        {
+            preserveScroll: true,
+            onFinish: () => {
+                isVoting.value = false;
+            },
+        },
+    );
+}
+
+// Comment form
+const commentForm = useForm<{ body: string }>({
+    body: '',
+});
+
+function submitComment(): void {
+    commentForm.post(commentsStore.url(photo.value.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            commentForm.reset();
+        },
+    });
+}
+
+function deleteComment(commentId: number): void {
+    router.delete(commentsDestroy.url(commentId), {
+        preserveScroll: true,
+    });
+}
+
+// Format relative date for comments
+function formatRelativeDate(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 30) {
+        return new Intl.DateTimeFormat('es-CL', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        }).format(date);
+    }
+
+    if (diffDays > 0) {
+        return `hace ${diffDays} ${diffDays === 1 ? 'día' : 'días'}`;
+    }
+
+    if (diffHours > 0) {
+        return `hace ${diffHours} ${diffHours === 1 ? 'hora' : 'horas'}`;
+    }
+
+    if (diffMinutes > 0) {
+        return `hace ${diffMinutes} ${diffMinutes === 1 ? 'minuto' : 'minutos'}`;
+    }
+
+    return 'hace un momento';
+}
+
+// Get user initials for avatar
+function getUserInitials(name: string): string {
+    return name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 2);
+}
 </script>
 
 <template>
@@ -193,6 +291,62 @@ const userHasComparison = computed(() => {
                         <h1 class="text-xl font-semibold tracking-tight">
                             {{ photo.description }}
                         </h1>
+                    </div>
+
+                    <!-- Voting -->
+                    <div
+                        class="flex items-center gap-3 rounded-lg border border-sidebar-border/70 p-3 dark:border-sidebar-border"
+                    >
+                        <template v-if="auth?.user">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                :class="[
+                                    photo.user_vote === 1
+                                        ? 'text-green-600 dark:text-green-400'
+                                        : 'text-muted-foreground',
+                                ]"
+                                :disabled="isVoting"
+                                @click="vote(1)"
+                            >
+                                <ThumbsUp class="size-4" />
+                            </Button>
+                            <span
+                                class="min-w-8 text-center text-sm font-semibold"
+                            >
+                                {{ photo.score }}
+                            </span>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                :class="[
+                                    photo.user_vote === -1
+                                        ? 'text-red-600 dark:text-red-400'
+                                        : 'text-muted-foreground',
+                                ]"
+                                :disabled="isVoting"
+                                @click="vote(-1)"
+                            >
+                                <ThumbsDown class="size-4" />
+                            </Button>
+                        </template>
+                        <template v-else>
+                            <ThumbsUp class="size-4 text-muted-foreground/50" />
+                            <span
+                                class="min-w-8 text-center text-sm font-semibold"
+                            >
+                                {{ photo.score }}
+                            </span>
+                            <ThumbsDown
+                                class="size-4 text-muted-foreground/50"
+                            />
+                            <Link
+                                :href="login.url()"
+                                class="ml-auto text-xs text-muted-foreground hover:underline"
+                            >
+                                Inicia sesión para votar
+                            </Link>
+                        </template>
                     </div>
 
                     <!-- Date -->
@@ -433,6 +587,140 @@ const userHasComparison = computed(() => {
                         </span>
                     </div>
                 </div>
+            </div>
+
+            <!-- Guest contribution banner -->
+            <Card v-if="!auth?.user" class="border-dashed">
+                <CardHeader>
+                    <CardTitle class="text-base">
+                        ¿Quieres contribuir?
+                    </CardTitle>
+                    <CardDescription>
+                        Inicia sesión para votar, comentar y subir fotos.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div class="flex gap-2">
+                        <Button as-child>
+                            <Link :href="login.url()"> Iniciar sesión </Link>
+                        </Button>
+                        <Button variant="outline" as-child>
+                            <Link :href="register.url()"> Registrarse </Link>
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <!-- Comments section -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2">
+                    <MessageCircle class="size-5" />
+                    <h2 class="text-lg font-semibold">
+                        Comentarios
+                        <span
+                            v-if="comments.length > 0"
+                            class="text-sm font-normal text-muted-foreground"
+                        >
+                            ({{ comments.length }})
+                        </span>
+                    </h2>
+                </div>
+
+                <!-- Comment form (authenticated users) -->
+                <form
+                    v-if="auth?.user"
+                    class="space-y-3"
+                    @submit.prevent="submitComment"
+                >
+                    <div class="flex gap-3">
+                        <Avatar class="size-8 shrink-0">
+                            <AvatarFallback class="text-xs">
+                                {{ getUserInitials(auth.user.name) }}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div class="flex-1 space-y-2">
+                            <textarea
+                                v-model="commentForm.body"
+                                class="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                placeholder="Escribe un comentario..."
+                            />
+                            <InputError :message="commentForm.errors.body" />
+                            <div class="flex justify-end">
+                                <Button
+                                    type="submit"
+                                    size="sm"
+                                    :disabled="
+                                        commentForm.processing ||
+                                        !commentForm.body.trim()
+                                    "
+                                >
+                                    Comentar
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Guest comment prompt -->
+                <div
+                    v-else
+                    class="rounded-lg border border-dashed border-sidebar-border/70 p-4 text-center text-sm text-muted-foreground dark:border-sidebar-border"
+                >
+                    <Link
+                        :href="login.url()"
+                        class="font-medium hover:underline"
+                    >
+                        Inicia sesión para comentar
+                    </Link>
+                </div>
+
+                <!-- Comments list -->
+                <div v-if="comments.length > 0" class="space-y-4">
+                    <div
+                        v-for="comment in comments"
+                        :key="comment.id"
+                        class="flex gap-3"
+                    >
+                        <Avatar class="size-8 shrink-0">
+                            <AvatarFallback class="text-xs">
+                                {{ getUserInitials(comment.user.name) }}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div class="flex-1 space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-medium">
+                                    {{ comment.user.name }}
+                                </span>
+                                <span class="text-xs text-muted-foreground">
+                                    {{ formatRelativeDate(comment.created_at) }}
+                                </span>
+                                <Button
+                                    v-if="
+                                        auth?.user &&
+                                        auth.user.id === comment.user.id
+                                    "
+                                    variant="ghost"
+                                    size="sm"
+                                    class="ml-auto h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                                    @click="deleteComment(comment.id)"
+                                >
+                                    <Trash2 class="size-3" />
+                                </Button>
+                            </div>
+                            <p class="text-sm text-muted-foreground">
+                                {{ comment.body }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty state -->
+                <p
+                    v-else
+                    class="py-4 text-center text-sm text-muted-foreground"
+                >
+                    No hay comentarios aún. Sé el primero en comentar.
+                </p>
             </div>
         </div>
     </AppLayout>

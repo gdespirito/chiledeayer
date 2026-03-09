@@ -35,6 +35,12 @@ class PhotoResource extends JsonResource
             'upvotes_count' => $this->upvotes_count,
             'downvotes_count' => $this->downvotes_count,
             'score' => $this->score(),
+            'user_vote' => $this->when(
+                $request->user() !== null,
+                fn () => $this->votes
+                    ->where('user_id', $request->user()?->id)
+                    ->first()?->value,
+            ),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
