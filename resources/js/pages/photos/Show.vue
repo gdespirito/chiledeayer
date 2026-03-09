@@ -17,6 +17,7 @@ import {
 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
+import JsonLd from '@/components/JsonLd.vue';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -157,6 +158,37 @@ const ogImage = computed(() => {
     const original = photo.value.files.find((f) => f.variant === 'original');
 
     return medium?.url ?? original?.url ?? null;
+});
+
+const photographSchema = computed(() => {
+    const schema: Record<string, unknown> = {
+        '@context': 'https://schema.org',
+        '@type': 'Photograph',
+        name: photo.value.description,
+        description: ogDescription.value,
+        dateCreated: String(photo.value.year_from),
+        image: ogImage.value,
+        author: {
+            '@type': 'Person',
+            name: photo.value.user.name,
+        },
+    };
+    if (photo.value.place) {
+        schema.contentLocation = {
+            '@type': 'Place',
+            name: photo.value.place.name,
+            address: {
+                '@type': 'PostalAddress',
+                addressLocality: photo.value.place.city,
+                addressRegion: photo.value.place.region,
+                addressCountry: photo.value.place.country ?? 'CL',
+            },
+        };
+    }
+    if (photo.value.tags.length > 0) {
+        schema.keywords = photo.value.tags.map((t) => t.name).join(', ');
+    }
+    return schema;
 });
 
 const hasComparisons = computed(
@@ -312,6 +344,7 @@ function getUserInitials(name: string): string {
             :content="ogImage ? 'summary_large_image' : 'summary'"
         />
     </Head>
+    <JsonLd :schema="photographSchema" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

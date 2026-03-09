@@ -14,6 +14,7 @@ import {
     Users,
 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
+import JsonLd from '@/components/JsonLd.vue';
 import PhotoCard from '@/components/PhotoCard.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -84,6 +85,21 @@ function getHelpNeeded(photo: Photo): HelpNeeded[] {
     return needs;
 }
 
+const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Archivo de Chile',
+    url: 'https://chiledeayer.cl',
+    description:
+        'Archivo fotográfico histórico de Chile. Fotos antiguas de ciudades, personas y lugares de Chile.',
+    inLanguage: 'es',
+    potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://chiledeayer.cl/search?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+    },
+};
+
 const exploreLinks = [
     {
         title: 'Explorar Fotos',
@@ -135,6 +151,7 @@ const exploreLinks = [
         />
         <meta property="og:type" content="website" />
     </Head>
+    <JsonLd :schema="websiteSchema" />
 
     <AppLayout>
         <div class="flex flex-1 flex-col">

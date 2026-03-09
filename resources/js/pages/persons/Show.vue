@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { MapPin } from 'lucide-vue-next';
+import { computed } from 'vue';
+import JsonLd from '@/components/JsonLd.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { index as personsIndex, show as personsShow } from '@/routes/persons';
 import { show as photosShow } from '@/routes/photos';
@@ -23,6 +25,19 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: personsShow(props.person.data.id),
     },
 ];
+
+const personSchema = computed(() => {
+    const schema: Record<string, unknown> = {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: props.person.data.name,
+        description: `Fotografías históricas de ${props.person.data.name} en el Archivo de Chile.`,
+    };
+    if (props.person.data.bio) {
+        schema.description = props.person.data.bio;
+    }
+    return schema;
+});
 
 function getThumbnail(photo: Photo): string | null {
     const thumb = photo.files.find((f) => f.variant === 'thumb');
@@ -65,6 +80,7 @@ function formatDateRange(photo: Photo): string {
             :content="`Fotografías históricas de ${props.person.data.name}.`"
         />
     </Head>
+    <JsonLd :schema="personSchema" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

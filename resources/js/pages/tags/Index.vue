@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { TagIcon } from 'lucide-vue-next';
+import JsonLd from '@/components/JsonLd.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { index as tagsIndex, show as tagsShow } from '@/routes/tags';
 import type { BreadcrumbItem, PaginatedData, Tag } from '@/types';
@@ -32,6 +33,21 @@ const breadcrumbs: BreadcrumbItem[] = [
             content="Explora las etiquetas del archivo fotográfico de Chile."
         />
     </Head>
+    <JsonLd
+        :schema="{
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Etiquetas — Archivo de Chile',
+            description:
+                'Etiquetas del archivo fotográfico de Chile. Temas, épocas y categorías de fotografías históricas.',
+            url: 'https://chiledeayer.cl/tags',
+            isPartOf: {
+                '@type': 'WebSite',
+                name: 'Archivo de Chile',
+                url: 'https://chiledeayer.cl',
+            },
+        }"
+    />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

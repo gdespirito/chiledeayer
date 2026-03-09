@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { MapPin } from 'lucide-vue-next';
+import JsonLd from '@/components/JsonLd.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import {
     create as photosCreate,
@@ -63,6 +64,21 @@ function formatDateRange(photo: Photo): string {
             content="Explora la colección de fotografías históricas de Chile."
         />
     </Head>
+    <JsonLd
+        :schema="{
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Fotografías históricas de Chile',
+            description:
+                'Colección de fotografías históricas de Chile. Imágenes de archivo que capturan la historia y cultura chilena.',
+            url: 'https://chiledeayer.cl/photos',
+            isPartOf: {
+                '@type': 'WebSite',
+                name: 'Archivo de Chile',
+                url: 'https://chiledeayer.cl',
+            },
+        }"
+    />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

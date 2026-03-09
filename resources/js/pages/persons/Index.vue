@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import JsonLd from '@/components/JsonLd.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { index as personsIndex, show as personsShow } from '@/routes/persons';
 import type { BreadcrumbItem, PaginatedData, Person } from '@/types';
@@ -31,6 +32,21 @@ const breadcrumbs: BreadcrumbItem[] = [
             content="Personas identificadas en fotografías históricas de Chile."
         />
     </Head>
+    <JsonLd
+        :schema="{
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Personas — Archivo de Chile',
+            description:
+                'Personas identificadas en fotografías históricas de Chile. Figuras históricas y ciudadanos del patrimonio visual chileno.',
+            url: 'https://chiledeayer.cl/persons',
+            isPartOf: {
+                '@type': 'WebSite',
+                name: 'Archivo de Chile',
+                url: 'https://chiledeayer.cl',
+            },
+        }"
+    />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

@@ -14,6 +14,7 @@ import {
     Trophy,
     Users,
 } from 'lucide-vue-next';
+import JsonLd from '@/components/JsonLd.vue';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { contribute, login, register } from '@/routes';
@@ -32,6 +33,19 @@ const steps = [
     { num: '3', text: 'Contribuye con información y votos' },
     { num: '4', text: 'Gana puntos y reconocimiento' },
 ];
+
+const howToSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'Cómo contribuir al Archivo de Chile',
+    description:
+        'Guía para contribuir al archivo fotográfico histórico de Chile. Sube fotografías históricas, identifica lugares, etiqueta y ayuda a preservar la memoria visual.',
+    step: steps.map((s, i) => ({
+        '@type': 'HowToStep',
+        position: i + 1,
+        name: s.text,
+    })),
+};
 </script>
 
 <template>
@@ -48,6 +62,7 @@ const steps = [
         />
         <meta property="og:type" content="website" />
     </Head>
+    <JsonLd :schema="howToSchema" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col">

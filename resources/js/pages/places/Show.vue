@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { MapPin } from 'lucide-vue-next';
+import { computed } from 'vue';
+import JsonLd from '@/components/JsonLd.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { show as photosShow } from '@/routes/photos';
 import { index as placesIndex, show as placesShow } from '@/routes/places';
@@ -23,6 +25,19 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: placesShow(props.place.data.slug),
     },
 ];
+
+const placeSchema = computed(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+    name: props.place.data.name,
+    description: `Fotografías históricas de ${props.place.data.name}. ${props.place.data.photos_count ?? 0} fotos de archivo.`,
+    address: {
+        '@type': 'PostalAddress',
+        addressLocality: props.place.data.city,
+        addressRegion: props.place.data.region,
+        addressCountry: props.place.data.country ?? 'CL',
+    },
+}));
 
 function getThumbnail(photo: Photo): string | null {
     const thumb = photo.files.find((f) => f.variant === 'thumb');
@@ -65,6 +80,7 @@ function formatDateRange(photo: Photo): string {
             :content="`Fotografías históricas de ${props.place.data.name}. ${props.place.data.photos_count ?? 0} fotos de archivo.`"
         />
     </Head>
+    <JsonLd :schema="placeSchema" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

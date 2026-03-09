@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { MapPin } from 'lucide-vue-next';
+import JsonLd from '@/components/JsonLd.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { index as placesIndex, show as placesShow } from '@/routes/places';
 import type { BreadcrumbItem, PaginatedData, Place } from '@/types';
@@ -32,6 +33,21 @@ const breadcrumbs: BreadcrumbItem[] = [
             content="Descubre lugares históricos de Chile a través de fotografías de archivo."
         />
     </Head>
+    <JsonLd
+        :schema="{
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Lugares históricos de Chile',
+            description:
+                'Lugares históricos de Chile a través de fotografías de archivo. Ciudades, pueblos y rincones del patrimonio chileno.',
+            url: 'https://chiledeayer.cl/places',
+            isPartOf: {
+                '@type': 'WebSite',
+                name: 'Archivo de Chile',
+                url: 'https://chiledeayer.cl',
+            },
+        }"
+    />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

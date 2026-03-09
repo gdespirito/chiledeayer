@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { MapPin, TagIcon } from 'lucide-vue-next';
+import { computed } from 'vue';
+import JsonLd from '@/components/JsonLd.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { show as photosShow } from '@/routes/photos';
 import { index as tagsIndex, show as tagsShow } from '@/routes/tags';
@@ -23,6 +25,19 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: tagsShow(props.tag.data.slug),
     },
 ];
+
+const tagSchema = computed(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${props.tag.data.name} — Archivo de Chile`,
+    description: `Fotografías históricas etiquetadas con ${props.tag.data.name}. ${props.tag.data.photos_count ?? 0} fotos de archivo.`,
+    url: `https://chiledeayer.cl/tags/${props.tag.data.slug}`,
+    isPartOf: {
+        '@type': 'WebSite',
+        name: 'Archivo de Chile',
+        url: 'https://chiledeayer.cl',
+    },
+}));
 
 function getThumbnail(photo: Photo): string | null {
     const thumb = photo.files.find((f) => f.variant === 'thumb');
@@ -65,6 +80,7 @@ function formatDateRange(photo: Photo): string {
             :content="`Fotografías históricas etiquetadas con ${props.tag.data.name}.`"
         />
     </Head>
+    <JsonLd :schema="tagSchema" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">
