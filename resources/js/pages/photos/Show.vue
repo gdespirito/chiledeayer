@@ -15,9 +15,10 @@ import {
     Trash2,
     User,
 } from 'lucide-vue-next';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import JsonLd from '@/components/JsonLd.vue';
+import PlacePicker from '@/components/PlacePicker.vue';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -31,13 +32,7 @@ import { store as commentsStore } from '@/routes/photos/comments';
 import { store as comparisonsStore } from '@/routes/photos/comparisons';
 import { update as metadataUpdate } from '@/routes/photos/metadata';
 import { store as voteStore } from '@/routes/photos/vote';
-import type {
-    BreadcrumbItem,
-    Comment,
-    ComparisonPhoto,
-    Photo,
-    Place,
-} from '@/types';
+import type { BreadcrumbItem, Comment, ComparisonPhoto, Photo } from '@/types';
 
 type Props = {
     photo: { data: Photo };
@@ -58,9 +53,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title:
-            photo.value.description.length > 40
-                ? photo.value.description.substring(0, 40) + '...'
-                : photo.value.description,
+            photo.value.title.length > 40
+                ? photo.value.title.substring(0, 40) + '...'
+                : photo.value.title,
         href: photosShow(photo.value.id),
     },
 ];
@@ -92,67 +87,6 @@ function submitComparison(): void {
         onSuccess: () => {
             showComparisonForm.value = false;
             comparisonForm.reset();
-        },
-    });
-}
-
-// Place search
-const showPlaceSearch = ref(false);
-const placeQuery = ref('');
-const placeResults = ref<Place[]>([]);
-const placeSearchLoading = ref(false);
-let placeSearchTimer: ReturnType<typeof setTimeout> | null = null;
-
-watch(placeQuery, (query) => {
-    if (placeSearchTimer) clearTimeout(placeSearchTimer);
-    if (query.length < 2) {
-        placeResults.value = [];
-        return;
-    }
-    placeSearchLoading.value = true;
-    placeSearchTimer = setTimeout(async () => {
-        const res = await fetch(
-            `/api/places/search?query=${encodeURIComponent(query)}`,
-        );
-        placeResults.value = await res.json();
-        placeSearchLoading.value = false;
-    }, 300);
-});
-
-function selectPlace(place: Place): void {
-    router.put(
-        metadataUpdate.url(photo.value.id),
-        { place_id: place.id },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                showPlaceSearch.value = false;
-                placeQuery.value = '';
-                placeResults.value = [];
-            },
-        },
-    );
-}
-
-// Place suggestion
-const showSuggestForm = ref(false);
-const suggestForm = useForm({
-    photo_id: photo.value.id,
-    name: '',
-    city: '',
-    region: '',
-    notes: '',
-});
-
-function submitSuggestion(): void {
-    suggestForm.post('/api/place-suggestions', {
-        preserveScroll: true,
-        onSuccess: () => {
-            showSuggestForm.value = false;
-            showPlaceSearch.value = false;
-            suggestForm.reset();
-            placeQuery.value = '';
-            placeResults.value = [];
         },
     });
 }
@@ -205,13 +139,13 @@ function formatPrecisionLabel(precision: Photo['date_precision']): string {
 const yearDisplay = computed(() => formatDateRange(photo.value));
 
 const ogTitle = computed(() => {
-    const desc = photo.value.description;
+    const t = photo.value.title;
 
-    return desc.length > 70 ? desc.substring(0, 67) + '...' : desc;
+    return t.length > 70 ? t.substring(0, 67) + '...' : t;
 });
 
 const ogDescription = computed(
-    () => `${photo.value.description} (${yearDisplay.value})`,
+    () => `${photo.value.title} (${yearDisplay.value})`,
 );
 
 const ogImage = computed(() => {
@@ -225,7 +159,7 @@ const photographSchema = computed(() => {
     const schema: Record<string, unknown> = {
         '@context': 'https://schema.org',
         '@type': 'Photograph',
-        name: photo.value.description,
+        name: photo.value.title,
         description: ogDescription.value,
         dateCreated: String(photo.value.year_from),
         image: ogImage.value,
@@ -418,7 +352,7 @@ function getUserInitials(name: string): string {
                         <img
                             v-if="getDisplayImage(photo)"
                             :src="getDisplayImage(photo)!"
-                            :alt="photo.description"
+                            :alt="photo.title"
                             class="w-full object-contain"
                         />
                         <div
@@ -434,10 +368,10 @@ function getUserInitials(name: string): string {
 
                 <!-- Metadata -->
                 <div class="space-y-6">
-                    <!-- Description -->
+                    <!-- Title -->
                     <div>
                         <h1 class="text-xl font-semibold tracking-tight">
-                            {{ photo.description }}
+                            {{ photo.title }}
                         </h1>
                     </div>
 
@@ -561,8 +495,25 @@ function getUserInitials(name: string): string {
                             <MapPin class="size-4 text-muted-foreground" />
                             Lugar
                         </div>
-                        <template v-if="photo.place && !showPlaceSearch">
-                            <p class="text-sm text-muted-foreground">
+                        <template v-if="auth?.user">
+                            <PlacePicker
+                                :model-value="photo.place?.id ?? null"
+                                :current-place="photo.place"
+                                @placed="
+                                    (p) =>
+                                        router.put(
+                                            metadataUpdate.url(photo.id),
+                                            { place_id: p.id },
+                                            { preserveScroll: true },
+                                        )
+                                "
+                            />
+                        </template>
+                        <template v-else>
+                            <p
+                                v-if="photo.place"
+                                class="text-sm text-muted-foreground"
+                            >
                                 {{ photo.place.name }}
                                 <template
                                     v-if="
@@ -584,159 +535,13 @@ function getUserInitials(name: string): string {
                                 </template>
                             </p>
                             <button
-                                v-if="auth?.user"
-                                class="text-xs text-muted-foreground hover:underline"
-                                @click="showPlaceSearch = true"
-                            >
-                                Cambiar lugar
-                            </button>
-                        </template>
-                        <template v-else-if="!showPlaceSearch">
-                            <button
+                                v-else
                                 class="text-sm text-muted-foreground hover:underline"
-                                @click="
-                                    auth?.user
-                                        ? (showPlaceSearch = true)
-                                        : router.visit(login.url())
-                                "
+                                @click="router.visit(login.url())"
                             >
                                 + Agregar ubicación
                             </button>
                         </template>
-                        <!-- Place search -->
-                        <div v-if="showPlaceSearch" class="space-y-2">
-                            <Input
-                                v-model="placeQuery"
-                                type="text"
-                                placeholder="Buscar lugar..."
-                                class="text-sm"
-                            />
-                            <div
-                                v-if="placeResults.length > 0"
-                                class="max-h-40 overflow-y-auto rounded-md border"
-                            >
-                                <button
-                                    v-for="place in placeResults"
-                                    :key="place.id"
-                                    class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-accent"
-                                    @click="selectPlace(place)"
-                                >
-                                    <MapPin
-                                        class="size-3 shrink-0 text-muted-foreground"
-                                    />
-                                    <span>{{ place.name }}</span>
-                                    <span
-                                        v-if="place.city"
-                                        class="text-xs text-muted-foreground"
-                                    >
-                                        {{ place.city }}
-                                    </span>
-                                </button>
-                            </div>
-                            <p
-                                v-else-if="
-                                    placeQuery.length >= 2 &&
-                                    !placeSearchLoading
-                                "
-                                class="text-xs text-muted-foreground"
-                            >
-                                No se encontraron lugares.
-                            </p>
-                            <!-- Suggest new place form -->
-                            <div v-if="!showSuggestForm">
-                                <button
-                                    class="text-xs font-medium text-primary hover:underline"
-                                    @click="
-                                        showSuggestForm = true;
-                                        suggestForm.name = placeQuery;
-                                    "
-                                >
-                                    + Sugerir un lugar nuevo
-                                </button>
-                            </div>
-                            <form
-                                v-if="showSuggestForm"
-                                class="space-y-2 rounded-md border p-3"
-                                @submit.prevent="submitSuggestion"
-                            >
-                                <div class="space-y-1">
-                                    <Label for="suggest-name"
-                                        >Nombre del lugar</Label
-                                    >
-                                    <Input
-                                        id="suggest-name"
-                                        v-model="suggestForm.name"
-                                        type="text"
-                                        placeholder="Ej: Palacio Cousiño"
-                                        required
-                                    />
-                                    <InputError
-                                        :message="suggestForm.errors.name"
-                                    />
-                                </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div class="space-y-1">
-                                        <Label for="suggest-city">Ciudad</Label>
-                                        <Input
-                                            id="suggest-city"
-                                            v-model="suggestForm.city"
-                                            type="text"
-                                            placeholder="Santiago"
-                                        />
-                                    </div>
-                                    <div class="space-y-1">
-                                        <Label for="suggest-region"
-                                            >Región</Label
-                                        >
-                                        <Input
-                                            id="suggest-region"
-                                            v-model="suggestForm.region"
-                                            type="text"
-                                            placeholder="Metropolitana"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="space-y-1">
-                                    <Label for="suggest-notes"
-                                        >Notas (opcional)</Label
-                                    >
-                                    <Input
-                                        id="suggest-notes"
-                                        v-model="suggestForm.notes"
-                                        type="text"
-                                        placeholder="Dirección aproximada, detalles..."
-                                    />
-                                </div>
-                                <div class="flex gap-2">
-                                    <Button
-                                        type="submit"
-                                        size="sm"
-                                        :disabled="suggestForm.processing"
-                                    >
-                                        Enviar sugerencia
-                                    </Button>
-                                    <Button
-                                        type="button"
-                                        size="sm"
-                                        variant="ghost"
-                                        @click="showSuggestForm = false"
-                                    >
-                                        Cancelar
-                                    </Button>
-                                </div>
-                            </form>
-                            <button
-                                v-if="!showSuggestForm"
-                                class="text-xs text-muted-foreground hover:underline"
-                                @click="
-                                    showPlaceSearch = false;
-                                    placeQuery = '';
-                                    placeResults = [];
-                                "
-                            >
-                                Cancelar
-                            </button>
-                        </div>
                     </div>
 
                     <!-- Tags -->
@@ -886,7 +691,7 @@ function getUserInitials(name: string): string {
                             <img
                                 v-if="getDisplayImage(photo)"
                                 :src="getDisplayImage(photo)!"
-                                :alt="photo.description"
+                                :alt="photo.title"
                                 class="h-full w-full object-cover"
                             />
                         </div>
