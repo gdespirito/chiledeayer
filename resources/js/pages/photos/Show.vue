@@ -15,7 +15,7 @@ import {
     Trash2,
     User,
 } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import InputError from '@/components/InputError.vue';
 import JsonLd from '@/components/JsonLd.vue';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -29,8 +29,15 @@ import { destroy as commentsDestroy } from '@/routes/comments';
 import { index as photosIndex, show as photosShow } from '@/routes/photos';
 import { store as commentsStore } from '@/routes/photos/comments';
 import { store as comparisonsStore } from '@/routes/photos/comparisons';
+import { update as metadataUpdate } from '@/routes/photos/metadata';
 import { store as voteStore } from '@/routes/photos/vote';
-import type { BreadcrumbItem, Comment, ComparisonPhoto, Photo } from '@/types';
+import type {
+    BreadcrumbItem,
+    Comment,
+    ComparisonPhoto,
+    Photo,
+    Place,
+} from '@/types';
 
 type Props = {
     photo: { data: Photo };
@@ -87,6 +94,44 @@ function submitComparison(): void {
             comparisonForm.reset();
         },
     });
+}
+
+// Place search
+const showPlaceSearch = ref(false);
+const placeQuery = ref('');
+const placeResults = ref<Place[]>([]);
+const placeSearchLoading = ref(false);
+let placeSearchTimer: ReturnType<typeof setTimeout> | null = null;
+
+watch(placeQuery, (query) => {
+    if (placeSearchTimer) clearTimeout(placeSearchTimer);
+    if (query.length < 2) {
+        placeResults.value = [];
+        return;
+    }
+    placeSearchLoading.value = true;
+    placeSearchTimer = setTimeout(async () => {
+        const res = await fetch(
+            `/api/places/search?query=${encodeURIComponent(query)}`,
+        );
+        placeResults.value = await res.json();
+        placeSearchLoading.value = false;
+    }, 300);
+});
+
+function selectPlace(place: Place): void {
+    router.put(
+        metadataUpdate.url(photo.value.id),
+        { place_id: place.id },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                showPlaceSearch.value = false;
+                placeQuery.value = '';
+                placeResults.value = [];
+            },
+        },
+    );
 }
 
 function getDisplayImage(photo: Photo): string | null {
@@ -377,6 +422,9 @@ function getUserInitials(name: string): string {
                     <div
                         class="flex items-center gap-3 rounded-lg border border-sidebar-border/70 p-3 dark:border-sidebar-border"
                     >
+                        <span class="text-sm text-muted-foreground">
+                            ¿Qué te pareció?
+                        </span>
                         <template v-if="auth?.user">
                             <Button
                                 variant="ghost"
@@ -483,32 +531,105 @@ function getUserInitials(name: string): string {
                     </div>
 
                     <!-- Place -->
-                    <div v-if="photo.place" class="space-y-1">
+                    <div class="space-y-1">
                         <div
                             class="flex items-center gap-2 text-sm font-medium"
                         >
                             <MapPin class="size-4 text-muted-foreground" />
                             Lugar
                         </div>
-                        <p class="text-sm text-muted-foreground">
-                            {{ photo.place.name }}
-                            <template
-                                v-if="photo.place.city || photo.place.region"
+                        <template v-if="photo.place && !showPlaceSearch">
+                            <p class="text-sm text-muted-foreground">
+                                {{ photo.place.name }}
+                                <template
+                                    v-if="
+                                        photo.place.city || photo.place.region
+                                    "
+                                >
+                                    <br />
+                                    <span class="text-xs">
+                                        {{
+                                            [
+                                                photo.place.city,
+                                                photo.place.region,
+                                                photo.place.country,
+                                            ]
+                                                .filter(Boolean)
+                                                .join(', ')
+                                        }}
+                                    </span>
+                                </template>
+                            </p>
+                            <button
+                                v-if="auth?.user"
+                                class="text-xs text-muted-foreground hover:underline"
+                                @click="showPlaceSearch = true"
                             >
-                                <br />
-                                <span class="text-xs">
-                                    {{
-                                        [
-                                            photo.place.city,
-                                            photo.place.region,
-                                            photo.place.country,
-                                        ]
-                                            .filter(Boolean)
-                                            .join(', ')
-                                    }}
-                                </span>
-                            </template>
-                        </p>
+                                Cambiar lugar
+                            </button>
+                        </template>
+                        <template v-else-if="!showPlaceSearch">
+                            <button
+                                class="text-sm text-muted-foreground hover:underline"
+                                @click="
+                                    auth?.user
+                                        ? (showPlaceSearch = true)
+                                        : router.visit(login.url())
+                                "
+                            >
+                                + Agregar ubicación
+                            </button>
+                        </template>
+                        <!-- Place search -->
+                        <div v-if="showPlaceSearch" class="space-y-2">
+                            <Input
+                                v-model="placeQuery"
+                                type="text"
+                                placeholder="Buscar lugar..."
+                                class="text-sm"
+                            />
+                            <div
+                                v-if="placeResults.length > 0"
+                                class="max-h-40 overflow-y-auto rounded-md border"
+                            >
+                                <button
+                                    v-for="place in placeResults"
+                                    :key="place.id"
+                                    class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-accent"
+                                    @click="selectPlace(place)"
+                                >
+                                    <MapPin
+                                        class="size-3 shrink-0 text-muted-foreground"
+                                    />
+                                    <span>{{ place.name }}</span>
+                                    <span
+                                        v-if="place.city"
+                                        class="text-xs text-muted-foreground"
+                                    >
+                                        {{ place.city }}
+                                    </span>
+                                </button>
+                            </div>
+                            <p
+                                v-else-if="
+                                    placeQuery.length >= 2 &&
+                                    !placeSearchLoading
+                                "
+                                class="text-xs text-muted-foreground"
+                            >
+                                No se encontraron lugares.
+                            </p>
+                            <button
+                                class="text-xs text-muted-foreground hover:underline"
+                                @click="
+                                    showPlaceSearch = false;
+                                    placeQuery = '';
+                                    placeResults = [];
+                                "
+                            >
+                                Cancelar
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Tags -->
