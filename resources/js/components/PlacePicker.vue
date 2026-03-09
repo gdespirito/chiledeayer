@@ -89,8 +89,10 @@ watch(googleQuery, (query) => {
     }, 300);
 });
 
-// Map confirmation
+// Confirmation flow: map → name
 const showMap = ref(false);
+const showNameStep = ref(false);
+const editableName = ref('');
 const mapContainer = ref<HTMLElement | null>(null);
 let map: L.Map | null = null;
 let marker: L.Marker | null = null;
@@ -171,9 +173,17 @@ function initMap(lat: number, lng: number): void {
     setTimeout(() => map?.invalidateSize(), 100);
 }
 
-async function confirmPlace(): Promise<void> {
+function confirmLocation(): void {
     if (!selectedGoogle.value) return;
+    editableName.value = selectedGoogle.value.name;
+    showNameStep.value = true;
+}
+
+async function submitPlace(): Promise<void> {
+    if (!selectedGoogle.value || !editableName.value.trim()) return;
     creatingPlace.value = true;
+
+    selectedGoogle.value.name = editableName.value.trim();
 
     const res = await fetch('/api/places', {
         method: 'POST',
@@ -199,6 +209,10 @@ async function confirmPlace(): Promise<void> {
     }
 }
 
+function backToMap(): void {
+    showNameStep.value = false;
+}
+
 function open(): void {
     mode.value = 'search';
     internalQuery.value = '';
@@ -210,6 +224,7 @@ function switchToGoogle(): void {
     googleQuery.value = internalQuery.value;
     googleResults.value = [];
     showMap.value = false;
+    showNameStep.value = false;
     selectedGoogle.value = null;
 }
 
@@ -220,6 +235,8 @@ function close(): void {
     googleQuery.value = '';
     googleResults.value = [];
     showMap.value = false;
+    showNameStep.value = false;
+    editableName.value = '';
     selectedGoogle.value = null;
     if (map) {
         map.remove();
@@ -376,8 +393,11 @@ onBeforeUnmount(() => {
                 </p>
             </div>
 
-            <!-- Map confirmation -->
-            <div v-if="showMap && selectedGoogle" class="space-y-2">
+            <!-- Step 1: Map confirmation -->
+            <div
+                v-if="showMap && selectedGoogle && !showNameStep"
+                class="space-y-2"
+            >
                 <p class="text-sm font-medium">
                     {{ selectedGoogle.name }}
                 </p>
@@ -389,11 +409,7 @@ onBeforeUnmount(() => {
                     class="h-48 w-full overflow-hidden rounded-md border"
                 />
                 <div class="flex gap-2">
-                    <Button
-                        size="sm"
-                        :disabled="creatingPlace"
-                        @click="confirmPlace"
-                    >
+                    <Button size="sm" @click="confirmLocation">
                         Confirmar ubicación
                     </Button>
                     <Button size="sm" variant="ghost" @click="close">
@@ -402,8 +418,54 @@ onBeforeUnmount(() => {
                 </div>
             </div>
 
+            <!-- Step 2: Name confirmation -->
+            <div v-if="showNameStep && selectedGoogle" class="space-y-2">
+                <Label>Nombre del lugar</Label>
+                <p class="text-xs text-muted-foreground">
+                    Puedes cambiar el nombre si el lugar se conocía de otra
+                    forma.
+                </p>
+                <Input
+                    v-model="editableName"
+                    type="text"
+                    placeholder="Ej: Banco Boston"
+                    class="text-sm"
+                    autofocus
+                />
+                <p
+                    v-if="
+                        selectedGoogle.city ||
+                        selectedGoogle.region ||
+                        selectedGoogle.country
+                    "
+                    class="text-xs text-muted-foreground"
+                >
+                    {{
+                        [
+                            selectedGoogle.city,
+                            selectedGoogle.region,
+                            selectedGoogle.country,
+                        ]
+                            .filter(Boolean)
+                            .join(', ')
+                    }}
+                </p>
+                <div class="flex gap-2">
+                    <Button
+                        size="sm"
+                        :disabled="creatingPlace || !editableName.trim()"
+                        @click="submitPlace"
+                    >
+                        Crear lugar
+                    </Button>
+                    <Button size="sm" variant="ghost" @click="backToMap">
+                        Volver
+                    </Button>
+                </div>
+            </div>
+
             <button
-                v-if="!showMap"
+                v-if="!showMap && !showNameStep"
                 class="text-xs text-muted-foreground hover:underline"
                 @click="close"
             >
