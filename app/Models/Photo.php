@@ -34,6 +34,7 @@ class Photo extends Model
         'phash',
         'upvotes_count',
         'downvotes_count',
+        'visits_count',
         'featured_at',
     ];
 
@@ -51,6 +52,7 @@ class Photo extends Model
             'pitch' => 'float',
             'upvotes_count' => 'integer',
             'downvotes_count' => 'integer',
+            'visits_count' => 'integer',
             'featured_at' => 'datetime',
         ];
     }
@@ -145,6 +147,16 @@ class Photo extends Model
     public function comparisons(): HasMany
     {
         return $this->hasMany(ComparisonPhoto::class);
+    }
+
+    /**
+     * Get the visits for this photo.
+     *
+     * @return HasMany<PhotoVisit, $this>
+     */
+    public function visits(): HasMany
+    {
+        return $this->hasMany(PhotoVisit::class);
     }
 
     /**

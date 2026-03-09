@@ -34,6 +34,7 @@ class PhotoResource extends JsonResource
             'comparisons' => ComparisonPhotoResource::collection($this->whenLoaded('comparisons')),
             'upvotes_count' => $this->upvotes_count,
             'downvotes_count' => $this->downvotes_count,
+            'visits_count' => $this->visits_count,
             'score' => $this->score(),
             'user_vote' => $this->when(
                 $request->user() !== null,

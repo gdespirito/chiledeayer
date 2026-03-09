@@ -84,6 +84,7 @@ export type Photo = {
     comments_count?: number;
     upvotes_count: number;
     downvotes_count: number;
+    visits_count: number;
     score: number;
     user_vote?: 1 | -1 | null;
     created_at: string;

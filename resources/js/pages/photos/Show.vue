@@ -4,6 +4,7 @@ import {
     Calendar,
     Camera,
     Check,
+    Eye,
     ImagePlus,
     Link2,
     MapPin,
@@ -458,6 +459,13 @@ function getUserInitials(name: string): string {
                                 <ThumbsDown class="size-4" />
                             </Button>
                         </template>
+                        <span
+                            v-if="photo.visits_count > 0"
+                            class="ml-auto flex items-center gap-1 text-xs text-muted-foreground"
+                        >
+                            <Eye class="size-3.5" />
+                            {{ photo.visits_count.toLocaleString('es-CL') }}
+                        </span>
                     </div>
 
                     <!-- Share -->

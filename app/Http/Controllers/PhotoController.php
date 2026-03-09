@@ -8,9 +8,11 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\PhotoResource;
 use App\Http\Resources\RevisionResource;
 use App\Jobs\ProcessPhotoUpload;
+use App\Jobs\RecordPhotoVisit;
 use App\Models\Photo;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -87,9 +89,16 @@ class PhotoController extends Controller
     /**
      * Display the specified photo.
      */
-    public function show(Photo $photo): Response
+    public function show(Request $request, Photo $photo): Response
     {
         $photo->load(['files', 'user', 'place', 'tags', 'votes', 'comments.user', 'revisions.user', 'comparisons.user']);
+
+        RecordPhotoVisit::dispatch($photo->id, $request->user()?->id, [
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'referer' => $request->header('referer'),
+            'timezone' => $request->header('X-Timezone'),
+        ]);
 
         $ogImage = $photo->files->firstWhere('variant', 'medium')?->url()
             ?? $photo->files->firstWhere('variant', 'original')?->url();
@@ -100,7 +109,7 @@ class PhotoController extends Controller
             'revisions' => RevisionResource::collection($photo->revisions->sortByDesc('created_at')),
         ])->withViewData([
             'ogImage' => $ogImage,
-            'ogTitle' => $photo->description,
+            'ogTitle' => $photo->title,
         ]);
     }
 }
