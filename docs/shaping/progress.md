@@ -87,6 +87,7 @@
 4. **ProcessPhotoUpload not idempotent** — Changed create() to firstOrCreate() to handle retries
 5. **Nginx 413 error** — Added proxy-body-size: 20m annotation to ingress
 6. **Photos 403** — Set Minio bucket policy to public read via mc
+7. **photos/Show blank page** — JsonResource wraps data in `{ data: {...} }` via Responsable interface; Show.vue accessed `props.photo.description` directly instead of `props.photo.data.description`. Fixed with computed to unwrap `.data`, matching pattern used by other pages
 
 ### Branding & UX
 - Replaced all "Laravel Starter Kit" references with "Archivo de Chile"
