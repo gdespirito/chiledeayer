@@ -3,11 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\CommentCreated;
+use App\Events\ComparisonUploaded;
 use App\Events\MetadataEdited;
 use App\Events\PersonTagged;
 use App\Events\PhotoUploaded;
 use App\Events\PhotoVoted;
 use App\Models\Comment;
+use App\Models\ComparisonPhoto;
 use App\Models\Photo;
 use App\Models\PointAction;
 use App\Models\PointTransaction;
@@ -27,6 +29,7 @@ class AwardPoints
         CommentCreated::class => ['key' => 'comment_created', 'type' => Comment::class, 'id' => 'commentId'],
         PhotoVoted::class => ['key' => 'photo_voted', 'type' => Vote::class, 'id' => 'photoId'],
         PersonTagged::class => ['key' => 'person_tagged', 'type' => Photo::class, 'id' => 'photoId'],
+        ComparisonUploaded::class => ['key' => 'comparison_uploaded', 'type' => ComparisonPhoto::class, 'id' => 'comparisonPhotoId'],
     ];
 
     /**
@@ -77,6 +80,7 @@ class AwardPoints
             CommentCreated::class => 'handle',
             PhotoVoted::class => 'handle',
             PersonTagged::class => 'handle',
+            ComparisonUploaded::class => 'handle',
         ];
     }
 }

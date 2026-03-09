@@ -89,7 +89,7 @@ class PhotoController extends Controller
      */
     public function show(Photo $photo): Response
     {
-        $photo->load(['files', 'user', 'place', 'tags', 'comments.user', 'revisions.user']);
+        $photo->load(['files', 'user', 'place', 'tags', 'comments.user', 'revisions.user', 'comparisons.user']);
 
         return Inertia::render('photos/Show', [
             'photo' => new PhotoResource($photo),

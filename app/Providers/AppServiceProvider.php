@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Listeners\AwardPoints;
 use App\Listeners\EvaluateBadges;
+use App\Listeners\NotifyPhotoOwner;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
 
         Event::subscribe(AwardPoints::class);
         Event::subscribe(EvaluateBadges::class);
+        Event::subscribe(NotifyPhotoOwner::class);
     }
 
     /**

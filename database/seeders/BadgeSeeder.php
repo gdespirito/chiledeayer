@@ -19,6 +19,7 @@ class BadgeSeeder extends Seeder
             ['key' => 'first_comment', 'name' => 'Comentarista', 'description' => 'Escribiste tu primer comentario', 'points_awarded' => 5],
             ['key' => 'first_edit', 'name' => 'Editor', 'description' => 'Hiciste tu primera edición', 'points_awarded' => 5],
             ['key' => 'first_person_tag', 'name' => 'Identificador', 'description' => 'Etiquetaste tu primera persona', 'points_awarded' => 5],
+            ['key' => 'first_comparison', 'name' => 'Fotógrafo del Ahora', 'description' => 'Subiste tu primera foto comparativa', 'points_awarded' => 10],
         ];
 
         foreach ($badges as $badge) {

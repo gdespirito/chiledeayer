@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\CommentCreated;
+use App\Events\ComparisonUploaded;
 use App\Events\MetadataEdited;
 use App\Events\PersonTagged;
 use App\Events\PhotoUploaded;
@@ -35,6 +36,7 @@ class EvaluateBadges
                 ->where('user_id', $user->id)
                 ->whereHas('pointAction', fn ($q) => $q->where('key', 'person_tagged'))
                 ->exists(),
+            'first_comparison' => fn (User $user): bool => $user->comparisonPhotos()->count() >= 1,
         ];
     }
 
@@ -87,6 +89,7 @@ class EvaluateBadges
             CommentCreated::class => 'handle',
             PhotoVoted::class => 'handle',
             PersonTagged::class => 'handle',
+            ComparisonUploaded::class => 'handle',
         ];
     }
 }

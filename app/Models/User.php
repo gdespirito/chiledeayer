@@ -80,6 +80,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the comparison photos uploaded by this user.
+     *
+     * @return HasMany<ComparisonPhoto, $this>
+     */
+    public function comparisonPhotos(): HasMany
+    {
+        return $this->hasMany(ComparisonPhoto::class);
+    }
+
+    /**
      * Get the badges earned by this user.
      *
      * @return BelongsToMany<Badge, $this>

@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Photo extends Model
 {
     /** @use HasFactory<\Database\Factories\PhotoFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, Searchable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -137,6 +138,16 @@ class Photo extends Model
     }
 
     /**
+     * Get the comparison photos ("foto del ahora") for this photo.
+     *
+     * @return HasMany<ComparisonPhoto, $this>
+     */
+    public function comparisons(): HasMany
+    {
+        return $this->hasMany(ComparisonPhoto::class);
+    }
+
+    /**
      * Get the reports for this photo.
      *
      * @return HasMany<Report, $this>
@@ -168,5 +179,36 @@ class Photo extends Model
     public function score(): int
     {
         return $this->upvotes_count - $this->downvotes_count;
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'description' => $this->description,
+            'year_from' => $this->year_from,
+            'year_to' => $this->year_to,
+            'place_name' => $this->place?->name,
+            'place_city' => $this->place?->city,
+            'place_region' => $this->place?->region,
+            'tags' => $this->tags->pluck('name')->toArray(),
+            'persons' => $this->persons->pluck('name')->toArray(),
+            'source_credit' => $this->source_credit,
+            'score' => $this->score(),
+            'created_at' => $this->created_at?->timestamp,
+        ];
+    }
+
+    /**
+     * Determine if the model should be searchable.
+     */
+    public function shouldBeSearchable(): bool
+    {
+        return ! $this->trashed();
     }
 }

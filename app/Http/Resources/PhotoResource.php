@@ -31,6 +31,7 @@ class PhotoResource extends JsonResource
             'files' => PhotoFileResource::collection($this->whenLoaded('files')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
             'persons' => PersonResource::collection($this->whenLoaded('persons')),
+            'comparisons' => ComparisonPhotoResource::collection($this->whenLoaded('comparisons')),
             'upvotes_count' => $this->upvotes_count,
             'downvotes_count' => $this->downvotes_count,
             'score' => $this->score(),

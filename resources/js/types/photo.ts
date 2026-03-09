@@ -44,6 +44,21 @@ export type Person = {
     pivot?: PersonPivot;
 };
 
+export type ComparisonPhoto = {
+    id: number;
+    photo_id: number;
+    user: {
+        id: number;
+        name: string;
+    };
+    description: string | null;
+    taken_at: string | null;
+    original_url: string | null;
+    medium_url: string | null;
+    thumb_url: string | null;
+    created_at: string;
+};
+
 export type Photo = {
     id: number;
     description: string;
@@ -58,6 +73,7 @@ export type Photo = {
     files: PhotoFile[];
     tags: Tag[];
     persons?: Person[];
+    comparisons?: ComparisonPhoto[];
     created_at: string;
     updated_at: string;
 };
