@@ -59,6 +59,13 @@ composer run setup            # Install deps, generate key, migrate, build front
 - Test structure mirrors app: `tests/Feature/Auth/`, `tests/Feature/Settings/`.
 - Uses in-memory SQLite for tests (configured in `phpunit.xml`).
 
+## Deployment
+
+- **Docker**: 3-stage build (composer deps → frontend build → final alpine image with nginx+supervisor).
+- **CI/CD**: GitHub Actions on push to main → build & push to `registry.freshwork.dev/chiledeayer:latest` → deploy via webhook.
+- **K8s**: Manifest at `~/code/k8s-infra/clusters/lab/apps/chiledeayer.yaml`. Uses MariaDB operator CRs, SealedSecrets, Ingress with cert-manager TLS.
+- **kubectl context**: `admin@freshwork` (always use this context for k8s operations).
+
 ---
 
 <laravel-boost-guidelines>
