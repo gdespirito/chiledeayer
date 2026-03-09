@@ -49,6 +49,7 @@ class SitemapController extends Controller
         $xml .= $this->url($baseUrl.'/map', 'daily', '0.9');
         $xml .= $this->url($baseUrl.'/leaderboard', 'daily', '0.9');
         $xml .= $this->url($baseUrl.'/contribuir', 'monthly', '0.7');
+        $xml .= $this->url($baseUrl.'/contacto', 'monthly', '0.5');
 
         // Individual photos
         foreach ($photos as $photo) {

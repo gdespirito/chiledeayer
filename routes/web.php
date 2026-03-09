@@ -5,6 +5,7 @@ use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\BatchUploadController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ComparisonPhotoController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DuplicateCheckController;
 use App\Http\Controllers\GooglePlacesController;
 use App\Http\Controllers\HomeController;
@@ -47,6 +48,9 @@ Route::get('api/places/search', [PlaceController::class, 'search'])->name('api.p
 Route::get('api/tags/search', [TagController::class, 'search'])->name('api.tags.search');
 
 Route::inertia('contribuir', 'Contribute')->name('contribute');
+
+Route::get('contacto', [ContactController::class, 'create'])->name('contact.create');
+Route::post('contacto', [ContactController::class, 'store'])->name('contact.store');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');

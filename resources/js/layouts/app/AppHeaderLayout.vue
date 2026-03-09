@@ -22,15 +22,24 @@ withDefaults(defineProps<Props>(), {
         <footer
             class="border-t border-sidebar-border/80 py-6 text-center text-sm text-muted-foreground"
         >
-            Hecho con ❤️ por
-            <a
-                href="https://freshwork.dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="underline underline-offset-2 hover:text-foreground"
-            >
-                Freshwork
-            </a>
+            <div>
+                Hecho con ❤️ por
+                <a
+                    href="https://freshwork.dev"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline underline-offset-2 hover:text-foreground"
+                >
+                    Freshwork
+                </a>
+                ·
+                <a
+                    href="/contacto"
+                    class="underline underline-offset-2 hover:text-foreground"
+                >
+                    Contacto
+                </a>
+            </div>
         </footer>
     </AppShell>
 </template>
