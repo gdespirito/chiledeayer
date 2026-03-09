@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
+import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import {
     Calendar,
     Camera,
@@ -21,17 +21,10 @@ import JsonLd from '@/components/JsonLd.vue';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { login, register } from '@/routes';
+import { login } from '@/routes';
 import { destroy as commentsDestroy } from '@/routes/comments';
 import { index as photosIndex, show as photosShow } from '@/routes/photos';
 import { store as commentsStore } from '@/routes/photos/comments';
@@ -418,21 +411,27 @@ function getUserInitials(name: string): string {
                             </Button>
                         </template>
                         <template v-else>
-                            <ThumbsUp class="size-4 text-muted-foreground/50" />
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="text-muted-foreground"
+                                @click="router.visit(login.url())"
+                            >
+                                <ThumbsUp class="size-4" />
+                            </Button>
                             <span
                                 class="min-w-8 text-center text-sm font-semibold"
                             >
                                 {{ photo.score }}
                             </span>
-                            <ThumbsDown
-                                class="size-4 text-muted-foreground/50"
-                            />
-                            <Link
-                                :href="login.url()"
-                                class="ml-auto text-xs text-muted-foreground hover:underline"
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="text-muted-foreground"
+                                @click="router.visit(login.url())"
                             >
-                                Inicia sesión para votar
-                            </Link>
+                                <ThumbsDown class="size-4" />
+                            </Button>
                         </template>
                     </div>
 
@@ -557,18 +556,16 @@ function getUserInitials(name: string): string {
                         </p>
                     </div>
 
-                    <!-- Upload comparison button (auth only) -->
-                    <div
-                        v-if="
-                            auth?.user &&
-                            !userHasComparison &&
-                            !showComparisonForm
-                        "
-                    >
+                    <!-- Upload comparison button -->
+                    <div v-if="!userHasComparison && !showComparisonForm">
                         <Button
                             variant="outline"
                             class="w-full"
-                            @click="showComparisonForm = true"
+                            @click="
+                                auth?.user
+                                    ? (showComparisonForm = true)
+                                    : router.visit(login.url())
+                            "
                         >
                             <ImagePlus class="mr-2 size-4" />
                             Subir foto del ahora
@@ -705,28 +702,6 @@ function getUserInitials(name: string): string {
                 </div>
             </div>
 
-            <!-- Guest contribution banner -->
-            <Card v-if="!auth?.user" class="border-dashed">
-                <CardHeader>
-                    <CardTitle class="text-base">
-                        ¿Quieres contribuir?
-                    </CardTitle>
-                    <CardDescription>
-                        Inicia sesión para votar, comentar y subir fotos.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div class="flex gap-2">
-                        <Button as-child>
-                            <Link :href="login.url()"> Iniciar sesión </Link>
-                        </Button>
-                        <Button variant="outline" as-child>
-                            <Link :href="register.url()"> Registrarse </Link>
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-
             <!-- Comments section -->
             <div class="space-y-6">
                 <div class="flex items-center gap-2">
@@ -742,16 +717,21 @@ function getUserInitials(name: string): string {
                     </h2>
                 </div>
 
-                <!-- Comment form (authenticated users) -->
+                <!-- Comment form -->
                 <form
-                    v-if="auth?.user"
                     class="space-y-3"
-                    @submit.prevent="submitComment"
+                    @submit.prevent="
+                        auth?.user ? submitComment() : router.visit(login.url())
+                    "
                 >
                     <div class="flex gap-3">
                         <Avatar class="size-8 shrink-0">
                             <AvatarFallback class="text-xs">
-                                {{ getUserInitials(auth.user.name) }}
+                                {{
+                                    auth?.user
+                                        ? getUserInitials(auth.user.name)
+                                        : '?'
+                                }}
                             </AvatarFallback>
                         </Avatar>
                         <div class="flex-1 space-y-2">
@@ -759,6 +739,9 @@ function getUserInitials(name: string): string {
                                 v-model="commentForm.body"
                                 class="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                 placeholder="Escribe un comentario..."
+                                @focus="
+                                    !auth?.user && router.visit(login.url())
+                                "
                             />
                             <InputError :message="commentForm.errors.body" />
                             <div class="flex justify-end">
@@ -776,19 +759,6 @@ function getUserInitials(name: string): string {
                         </div>
                     </div>
                 </form>
-
-                <!-- Guest comment prompt -->
-                <div
-                    v-else
-                    class="rounded-lg border border-dashed border-sidebar-border/70 p-4 text-center text-sm text-muted-foreground dark:border-sidebar-border"
-                >
-                    <Link
-                        :href="login.url()"
-                        class="font-medium hover:underline"
-                    >
-                        Inicia sesión para comentar
-                    </Link>
-                </div>
 
                 <!-- Comments list -->
                 <div v-if="comments.length > 0" class="space-y-4">
