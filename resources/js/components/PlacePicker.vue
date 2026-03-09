@@ -5,6 +5,7 @@ import { nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useLeafletIcons } from '@/composables/useLeafletIcons';
 import type { Place } from '@/types';
 
 type Props = {
@@ -146,6 +147,7 @@ async function selectGooglePrediction(
 }
 
 function initMap(lat: number, lng: number): void {
+    useLeafletIcons();
     if (!mapContainer.value) return;
     if (map) {
         map.remove();
@@ -164,6 +166,9 @@ function initMap(lat: number, lng: number): void {
         selectedGoogle.value.latitude = pos.lat;
         selectedGoogle.value.longitude = pos.lng;
     });
+
+    // Fix tiles not rendering when container size isn't settled yet
+    setTimeout(() => map?.invalidateSize(), 100);
 }
 
 async function confirmPlace(): Promise<void> {
@@ -346,16 +351,16 @@ onBeforeUnmount(() => {
                         @click="selectGooglePrediction(prediction)"
                     >
                         <MapPin class="size-3 shrink-0 text-muted-foreground" />
-                        <div>
-                            <span class="font-medium">
+                        <div class="min-w-0">
+                            <div class="truncate font-medium">
                                 {{ prediction.structured_formatting.main_text }}
-                            </span>
-                            <span class="text-xs text-muted-foreground">
+                            </div>
+                            <div class="truncate text-xs text-muted-foreground">
                                 {{
                                     prediction.structured_formatting
                                         .secondary_text
                                 }}
-                            </span>
+                            </div>
                         </div>
                     </button>
                 </div>
@@ -379,7 +384,10 @@ onBeforeUnmount(() => {
                 <p class="text-xs text-muted-foreground">
                     Arrastra el pin para ajustar la ubicación exacta.
                 </p>
-                <div ref="mapContainer" class="h-48 w-full rounded-md border" />
+                <div
+                    ref="mapContainer"
+                    class="h-48 w-full overflow-hidden rounded-md border"
+                />
                 <div class="flex gap-2">
                     <Button
                         size="sm"

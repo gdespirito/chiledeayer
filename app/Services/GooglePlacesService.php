@@ -6,6 +6,21 @@ use Illuminate\Support\Facades\Http;
 
 class GooglePlacesService
 {
+    /** @var array<int, string> Types relevant for a historical photo archive (landmarks, monuments, geographic, civic) */
+    private const LANDMARK_TYPES = [
+        'cultural_landmark', 'historical_place', 'monument', 'museum',
+        'history_museum', 'art_museum', 'art_gallery', 'castle', 'sculpture', 'fountain',
+        'tourist_attraction', 'scenic_spot', 'visitor_center',
+        'church', 'synagogue', 'mosque', 'buddhist_temple', 'hindu_temple',
+        'park', 'national_park', 'city_park', 'state_park', 'botanical_garden',
+        'garden', 'nature_preserve', 'hiking_area', 'woods',
+        'beach', 'island', 'lake', 'mountain_peak', 'river',
+        'cemetery', 'library', 'university', 'school',
+        'city_hall', 'courthouse', 'fire_station',
+        'locality', 'sublocality', 'neighborhood',
+        'administrative_area_level_1', 'administrative_area_level_2',
+    ];
+
     private string $apiKey;
 
     public function __construct()
@@ -15,6 +30,9 @@ class GooglePlacesService
 
     /**
      * Search for places using Google Places Autocomplete (New).
+     *
+     * Results are sorted to prioritize landmarks, monuments, and geographic
+     * features over commercial establishments.
      *
      * @return array<int, array{place_id: string, description: string, structured_formatting: array{main_text: string, secondary_text: string}}>
      */
@@ -37,9 +55,22 @@ class GooglePlacesService
                     'main_text' => $s['placePrediction']['structuredFormat']['mainText']['text'] ?? '',
                     'secondary_text' => $s['placePrediction']['structuredFormat']['secondaryText']['text'] ?? '',
                 ],
+                'types' => $s['placePrediction']['types'] ?? [],
             ])
+            ->sortBy(fn (array $p) => $this->hasLandmarkType($p['types']) ? 0 : 1)
+            ->map(fn (array $p) => collect($p)->except('types')->all())
             ->values()
             ->all();
+    }
+
+    /**
+     * Check if any of the given types match landmark/geographic types.
+     *
+     * @param  array<int, string>  $types
+     */
+    private function hasLandmarkType(array $types): bool
+    {
+        return count(array_intersect($types, self::LANDMARK_TYPES)) > 0;
     }
 
     /**

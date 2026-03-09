@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/vue3';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useLeafletIcons } from '@/composables/useLeafletIcons';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 
@@ -27,19 +28,7 @@ const yearTo = ref(2026);
 const loading = ref(false);
 const photoCount = ref(0);
 
-// Fix Leaflet default icon paths (broken by bundlers)
-
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: new URL(
-        'leaflet/dist/images/marker-icon-2x.png',
-        import.meta.url,
-    ).href,
-    iconUrl: new URL('leaflet/dist/images/marker-icon.png', import.meta.url)
-        .href,
-    shadowUrl: new URL('leaflet/dist/images/marker-shadow.png', import.meta.url)
-        .href,
-});
+useLeafletIcons();
 
 async function fetchPhotos(): Promise<void> {
     if (!map) return;

@@ -274,10 +274,6 @@ function formatRelativeDate(dateString: string): string {
 const canShare = ref(false);
 const linkCopied = ref(false);
 
-onMounted(() => {
-    canShare.value = typeof navigator.share === 'function';
-});
-
 async function sharePhoto(): Promise<void> {
     const url = window.location.href;
 
@@ -309,6 +305,25 @@ async function copyLink(): Promise<void> {
         // Fallback
     }
 }
+
+// Mini map
+const osmEmbedUrl = computed(() => {
+    const place = photo.value.place;
+    if (!place?.latitude || !place?.longitude) return null;
+    const delta = 0.004;
+    const bbox = `${place.longitude - delta},${place.latitude - delta},${place.longitude + delta},${place.latitude + delta}`;
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${place.latitude},${place.longitude}`;
+});
+
+const googleMapsUrl = computed(() => {
+    const place = photo.value.place;
+    if (!place?.latitude || !place?.longitude) return null;
+    return `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`;
+});
+
+onMounted(() => {
+    canShare.value = typeof navigator.share === 'function';
+});
 
 // Get user initials for avatar
 function getUserInitials(name: string): string {
@@ -548,6 +563,23 @@ function getUserInitials(name: string): string {
                                 + Agregar ubicación
                             </button>
                         </template>
+
+                        <!-- Mini map -->
+                        <div v-if="osmEmbedUrl" class="group relative mt-2">
+                            <iframe
+                                :src="osmEmbedUrl"
+                                class="h-32 w-full rounded-md border"
+                                loading="lazy"
+                            />
+                            <a
+                                :href="googleMapsUrl!"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="absolute right-2 bottom-2 rounded bg-white/90 px-2 py-0.5 text-[10px] font-medium text-neutral-700 opacity-0 shadow-sm transition group-hover:opacity-100"
+                            >
+                                Abrir en Google Maps
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Tags -->
