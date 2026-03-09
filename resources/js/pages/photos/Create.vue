@@ -2,6 +2,7 @@
 import { Head, useForm } from '@inertiajs/vue3';
 import { Upload } from 'lucide-vue-next';
 import InputError from '@/components/InputError.vue';
+import PlacePicker from '@/components/PlacePicker.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -29,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const form = useForm<{
     photo: File | null;
-    description: string;
+    title: string;
     year_from: number | string;
     year_to: number | string;
     date_precision: 'exact' | 'year' | 'decade' | 'circa';
@@ -38,7 +39,7 @@ const form = useForm<{
     tags: string;
 }>({
     photo: null,
-    description: '',
+    title: '',
     year_from: '',
     year_to: '',
     date_precision: 'year',
@@ -94,17 +95,17 @@ function submit(): void {
                     <InputError :message="form.errors.photo" />
                 </div>
 
-                <!-- Description -->
+                <!-- Title -->
                 <div class="grid gap-2">
-                    <Label for="description">Descripción</Label>
-                    <textarea
-                        id="description"
-                        v-model="form.description"
-                        class="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40"
-                        placeholder="Describe la fotografía..."
+                    <Label for="title">Título</Label>
+                    <Input
+                        id="title"
+                        v-model="form.title"
+                        type="text"
+                        placeholder="Ej: Plaza de Armas, Santiago"
                         required
                     />
-                    <InputError :message="form.errors.description" />
+                    <InputError :message="form.errors.title" />
                 </div>
 
                 <!-- Year range -->
@@ -158,6 +159,21 @@ function submit(): void {
                         </SelectContent>
                     </Select>
                     <InputError :message="form.errors.date_precision" />
+                </div>
+
+                <!-- Place -->
+                <div class="grid gap-2">
+                    <Label
+                        >Ubicación
+                        <span class="text-muted-foreground"
+                            >(opcional)</span
+                        ></Label
+                    >
+                    <PlacePicker
+                        v-model="form.place_id"
+                        @placed="(p) => (form.place_id = p.id)"
+                    />
+                    <InputError :message="form.errors.place_id" />
                 </div>
 
                 <!-- Source credit -->
