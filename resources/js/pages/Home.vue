@@ -174,7 +174,7 @@ const exploreLinks = [
 
             <!-- Photo of the Day -->
             <section v-if="props.photoOfTheDay" class="px-4 pb-12 lg:px-8">
-                <div class="mx-auto max-w-4xl">
+                <div class="mx-auto max-w-6xl">
                     <div class="mb-6 flex items-center gap-2">
                         <Star class="size-5 text-amber-500" />
                         <h2 class="text-2xl font-semibold tracking-tight">
@@ -183,10 +183,10 @@ const exploreLinks = [
                     </div>
                     <Link
                         :href="`/photos/${props.photoOfTheDay.data.id}`"
-                        class="group block overflow-hidden rounded-2xl border border-sidebar-border/70 bg-card shadow-sm transition-shadow hover:shadow-lg dark:border-sidebar-border"
+                        class="group grid overflow-hidden rounded-2xl border border-sidebar-border/70 bg-card shadow-sm transition-shadow hover:shadow-lg md:grid-cols-2 dark:border-sidebar-border"
                     >
                         <div
-                            class="relative aspect-[3/1] overflow-hidden bg-muted"
+                            class="relative aspect-[4/3] overflow-hidden bg-muted"
                         >
                             <img
                                 v-if="getThumbnail(props.photoOfTheDay.data)"
@@ -195,18 +195,49 @@ const exploreLinks = [
                                 class="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                         </div>
-                        <div class="p-6">
-                            <p class="text-lg font-medium">
-                                {{ props.photoOfTheDay.data.description }}
-                            </p>
+                        <div
+                            class="flex flex-col justify-center gap-4 p-6 lg:p-8"
+                        >
                             <p
-                                v-if="props.photoOfTheDay.data.place"
-                                class="mt-2 text-sm text-muted-foreground"
+                                class="text-lg leading-relaxed font-medium lg:text-xl"
                             >
-                                {{ props.photoOfTheDay.data.place.name }}
-                                &middot;
-                                {{ props.photoOfTheDay.data.year_from }}
+                                {{
+                                    props.photoOfTheDay.data.description
+                                }}
                             </p>
+                            <div
+                                class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground"
+                            >
+                                <span
+                                    v-if="props.photoOfTheDay.data.place"
+                                    class="flex items-center gap-1"
+                                >
+                                    <MapPin class="size-3.5" />
+                                    {{
+                                        props.photoOfTheDay.data.place.name
+                                    }}
+                                </span>
+                                <span>&middot;</span>
+                                <span>~{{ props.photoOfTheDay.data.year_from }}</span>
+                            </div>
+                            <div
+                                v-if="props.photoOfTheDay.data.tags.length > 0"
+                                class="flex flex-wrap gap-1.5"
+                            >
+                                <span
+                                    v-for="tag in props.photoOfTheDay.data.tags.slice(0, 5)"
+                                    :key="tag.id"
+                                    class="rounded-full bg-stone-100 px-2.5 py-0.5 text-xs text-stone-600 dark:bg-stone-800 dark:text-stone-400"
+                                >
+                                    {{ tag.name }}
+                                </span>
+                            </div>
+                            <span
+                                class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-amber-600 group-hover:text-amber-700 dark:text-amber-400 dark:group-hover:text-amber-300"
+                            >
+                                Ver foto
+                                <ArrowRight class="size-4" />
+                            </span>
                         </div>
                     </Link>
                 </div>

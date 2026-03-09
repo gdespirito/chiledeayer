@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { MapPin } from 'lucide-vue-next';
+import { MapPin, ThumbsUp } from 'lucide-vue-next';
 import { show as photosShow } from '@/routes/photos';
 import type { Photo } from '@/types';
 
@@ -63,6 +63,13 @@ function formatDateRange(photo: Photo): string {
                 <span v-if="props.photo.place" class="flex items-center gap-1">
                     <MapPin class="size-3" />
                     {{ props.photo.place.name }}
+                </span>
+                <span
+                    v-if="props.photo.score > 0"
+                    class="ml-auto flex items-center gap-1 text-amber-600 dark:text-amber-400"
+                >
+                    <ThumbsUp class="size-3" />
+                    {{ props.photo.score }}
                 </span>
             </div>
         </div>
