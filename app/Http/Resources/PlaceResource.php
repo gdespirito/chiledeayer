@@ -27,6 +27,15 @@ class PlaceResource extends JsonResource
             'region' => $this->region,
             'city' => $this->city,
             'photos_count' => $this->whenCounted('photos'),
+            'preview_photos' => $this->when(
+                $this->relationLoaded('photos'),
+                fn () => $this->photos->map(fn ($photo) => [
+                    'id' => $photo->id,
+                    'url' => $photo->files->first(fn ($f) => $f->variant === 'thumb')?->url()
+                        ?? $photo->files->first(fn ($f) => $f->variant === 'medium')?->url()
+                        ?? $photo->files->first()?->url(),
+                ]),
+            ),
         ];
     }
 }

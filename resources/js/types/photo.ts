@@ -1,5 +1,10 @@
 import type { User } from './auth';
 
+export type PreviewPhoto = {
+    id: number;
+    url: string | null;
+};
+
 export type Place = {
     id: number;
     name: string;
@@ -11,6 +16,7 @@ export type Place = {
     region: string | null;
     city: string | null;
     photos_count?: number;
+    preview_photos?: PreviewPhoto[];
 };
 
 export type Tag = {

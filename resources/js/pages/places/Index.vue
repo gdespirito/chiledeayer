@@ -45,15 +45,87 @@ const breadcrumbs: BreadcrumbItem[] = [
                     v-for="place in props.places.data"
                     :key="place.id"
                     :href="placesShow(place.slug)"
-                    class="group overflow-hidden rounded-xl border border-sidebar-border/70 bg-card p-4 shadow-sm transition-shadow hover:shadow-md dark:border-sidebar-border"
+                    class="group overflow-hidden rounded-xl border border-sidebar-border/70 bg-card shadow-sm transition-shadow hover:shadow-md dark:border-sidebar-border"
                 >
-                    <div class="space-y-1.5">
-                        <div class="flex items-center gap-2">
-                            <MapPin class="size-4 text-muted-foreground" />
-                            <h2 class="text-sm font-medium">
-                                {{ place.name }}
-                            </h2>
+                    <!-- Photo collage -->
+                    <div
+                        v-if="
+                            place.preview_photos &&
+                            place.preview_photos.length > 0
+                        "
+                        class="relative aspect-[4/3] overflow-hidden bg-muted"
+                    >
+                        <!-- 1 photo: full -->
+                        <img
+                            v-if="place.preview_photos.length === 1"
+                            :src="place.preview_photos[0].url!"
+                            :alt="place.name"
+                            class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <!-- 2 photos: side by side -->
+                        <div
+                            v-else-if="place.preview_photos.length === 2"
+                            class="grid h-full grid-cols-2 gap-0.5"
+                        >
+                            <img
+                                v-for="p in place.preview_photos"
+                                :key="p.id"
+                                :src="p.url!"
+                                :alt="place.name"
+                                class="size-full object-cover"
+                            />
                         </div>
+                        <!-- 3 photos: one large left, two stacked right -->
+                        <div
+                            v-else-if="place.preview_photos.length === 3"
+                            class="grid h-full grid-cols-2 gap-0.5"
+                        >
+                            <img
+                                :src="place.preview_photos[0].url!"
+                                :alt="place.name"
+                                class="size-full object-cover"
+                            />
+                            <div class="grid grid-rows-2 gap-0.5">
+                                <img
+                                    :src="place.preview_photos[1].url!"
+                                    :alt="place.name"
+                                    class="size-full object-cover"
+                                />
+                                <img
+                                    :src="place.preview_photos[2].url!"
+                                    :alt="place.name"
+                                    class="size-full object-cover"
+                                />
+                            </div>
+                        </div>
+                        <!-- 4 photos: 2x2 grid -->
+                        <div
+                            v-else
+                            class="grid h-full grid-cols-2 grid-rows-2 gap-0.5"
+                        >
+                            <img
+                                v-for="p in place.preview_photos.slice(0, 4)"
+                                :key="p.id"
+                                :src="p.url!"
+                                :alt="place.name"
+                                class="size-full object-cover"
+                            />
+                        </div>
+                    </div>
+                    <!-- No photos placeholder -->
+                    <div
+                        v-else
+                        class="flex aspect-[4/3] items-center justify-center bg-muted"
+                    >
+                        <MapPin
+                            class="size-8 text-muted-foreground/40"
+                        />
+                    </div>
+
+                    <div class="space-y-1 p-4">
+                        <h2 class="text-sm font-medium">
+                            {{ place.name }}
+                        </h2>
                         <p
                             v-if="place.region || place.city"
                             class="text-xs text-muted-foreground"

@@ -17,13 +17,14 @@ class PlaceController extends Controller
      */
     public function index(): Response
     {
+        $places = Place::query()
+            ->withCount('photos')
+            ->with(['photos' => fn ($q) => $q->with('files')->latest()->limit(4)])
+            ->orderBy('name')
+            ->paginate(24);
+
         return Inertia::render('places/Index', [
-            'places' => PlaceResource::collection(
-                Place::query()
-                    ->withCount('photos')
-                    ->orderBy('name')
-                    ->paginate(24)
-            ),
+            'places' => PlaceResource::collection($places),
         ]);
     }
 
