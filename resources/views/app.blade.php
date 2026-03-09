@@ -36,7 +36,8 @@
         <meta property="og:site_name" content="Chile de Ayer">
         <meta property="og:locale" content="es_CL">
         <meta property="og:type" inertia content="website">
-        <meta property="og:image" inertia content="{{ asset('og-image.png') }}">
+        <meta property="og:title" inertia content="{{ $ogTitle ?? config('app.name', 'Chile de Ayer') }}">
+        <meta property="og:image" inertia content="{{ $ogImage ?? asset('og-image.png') }}">
         <meta property="og:image:width" inertia content="1200">
         <meta property="og:image:height" inertia content="630">
         <meta name="twitter:card" inertia content="summary_large_image">

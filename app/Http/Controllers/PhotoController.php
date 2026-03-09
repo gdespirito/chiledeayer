@@ -91,10 +91,16 @@ class PhotoController extends Controller
     {
         $photo->load(['files', 'user', 'place', 'tags', 'votes', 'comments.user', 'revisions.user', 'comparisons.user']);
 
+        $ogImage = $photo->files->firstWhere('variant', 'medium')?->url()
+            ?? $photo->files->firstWhere('variant', 'original')?->url();
+
         return Inertia::render('photos/Show', [
             'photo' => new PhotoResource($photo),
             'comments' => CommentResource::collection($photo->comments->sortByDesc('created_at')),
             'revisions' => RevisionResource::collection($photo->revisions->sortByDesc('created_at')),
+        ])->withViewData([
+            'ogImage' => $ogImage,
+            'ogTitle' => $photo->description,
         ]);
     }
 }
