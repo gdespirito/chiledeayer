@@ -28,7 +28,7 @@ const loading = ref(false);
 const photoCount = ref(0);
 
 // Fix Leaflet default icon paths (broken by bundlers)
- 
+
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: new URL(
