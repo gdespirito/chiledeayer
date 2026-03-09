@@ -252,7 +252,7 @@ function getUserInitials(name: string): string {
 </script>
 
 <template>
-    <Head :title="`${ogTitle} — Archivo de Chile`">
+    <Head :title="ogTitle">
         <meta property="og:title" :content="ogTitle" />
         <meta property="og:description" :content="ogDescription" />
         <meta v-if="ogImage" property="og:image" :content="ogImage" />
