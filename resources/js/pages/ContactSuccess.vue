@@ -41,7 +41,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                     responderemos lo antes posible al correo que nos indicaste.
                 </p>
 
-                <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                <div
+                    class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center"
+                >
                     <Button as-child>
                         <Link href="/">
                             <Home class="mr-2 size-4" />

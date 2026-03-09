@@ -27,7 +27,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             name="description"
             content="Explora las etiquetas del archivo fotográfico de Chile. Temas, épocas y categorías de fotografías históricas."
         />
-        <meta property="og:title" content="Etiquetas — Archivo de Chile" />
+        <meta property="og:title" content="Etiquetas — Chile de Ayer" />
         <meta
             property="og:description"
             content="Explora las etiquetas del archivo fotográfico de Chile."
@@ -37,13 +37,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         :schema="{
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
-            name: 'Etiquetas — Archivo de Chile',
+            name: 'Etiquetas — Chile de Ayer',
             description:
                 'Etiquetas del archivo fotográfico de Chile. Temas, épocas y categorías de fotografías históricas.',
             url: 'https://chiledeayer.cl/tags',
             isPartOf: {
                 '@type': 'WebSite',
-                name: 'Archivo de Chile',
+                name: 'Chile de Ayer',
                 url: 'https://chiledeayer.cl',
             },
         }"

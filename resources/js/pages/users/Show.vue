@@ -81,11 +81,11 @@ function formatMemberSince(dateString: string): string {
         <meta
             head-key="description"
             name="description"
-            :content="`Perfil de ${props.user.data.name} en el Archivo de Chile. ${props.user.data.photos_count} fotos contribuidas.`"
+            :content="`Perfil de ${props.user.data.name} en el Chile de Ayer. ${props.user.data.photos_count} fotos contribuidas.`"
         />
         <meta
             property="og:title"
-            :content="`${props.user.data.name} — Archivo de Chile`"
+            :content="`${props.user.data.name} — Chile de Ayer`"
         />
         <meta
             property="og:description"

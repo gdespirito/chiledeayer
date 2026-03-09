@@ -73,7 +73,7 @@ function formatDateRange(photo: Photo): string {
         />
         <meta
             property="og:title"
-            :content="`${props.place.data.name} — Archivo de Chile`"
+            :content="`${props.place.data.name} — Chile de Ayer`"
         />
         <meta
             property="og:description"

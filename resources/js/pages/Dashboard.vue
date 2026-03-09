@@ -64,7 +64,7 @@ const quickLinks = [
                     Bienvenido, {{ user.name }}
                 </h1>
                 <p class="mt-2 text-stone-600 dark:text-stone-400">
-                    Gracias por ser parte del Archivo de Chile. Tu contribución
+                    Gracias por ser parte del Chile de Ayer. Tu contribución
                     ayuda a preservar nuestra memoria visual.
                 </p>
                 <div class="mt-6">

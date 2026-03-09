@@ -31,7 +31,7 @@ const personSchema = computed(() => {
         '@context': 'https://schema.org',
         '@type': 'Person',
         name: props.person.data.name,
-        description: `Fotografías históricas de ${props.person.data.name} en el Archivo de Chile.`,
+        description: `Fotografías históricas de ${props.person.data.name} en el Chile de Ayer.`,
     };
     if (props.person.data.bio) {
         schema.description = props.person.data.bio;
@@ -69,11 +69,11 @@ function formatDateRange(photo: Photo): string {
         <meta
             head-key="description"
             name="description"
-            :content="`Fotografías históricas de ${props.person.data.name} en el Archivo de Chile.`"
+            :content="`Fotografías históricas de ${props.person.data.name} en el Chile de Ayer.`"
         />
         <meta
             property="og:title"
-            :content="`${props.person.data.name} — Archivo de Chile`"
+            :content="`${props.person.data.name} — Chile de Ayer`"
         />
         <meta
             property="og:description"

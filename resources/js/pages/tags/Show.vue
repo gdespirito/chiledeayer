@@ -29,12 +29,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 const tagSchema = computed(() => ({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${props.tag.data.name} — Archivo de Chile`,
+    name: `${props.tag.data.name} — Chile de Ayer`,
     description: `Fotografías históricas etiquetadas con ${props.tag.data.name}. ${props.tag.data.photos_count ?? 0} fotos de archivo.`,
     url: `https://chiledeayer.cl/tags/${props.tag.data.slug}`,
     isPartOf: {
         '@type': 'WebSite',
-        name: 'Archivo de Chile',
+        name: 'Chile de Ayer',
         url: 'https://chiledeayer.cl',
     },
 }));
@@ -73,7 +73,7 @@ function formatDateRange(photo: Photo): string {
         />
         <meta
             property="og:title"
-            :content="`${props.tag.data.name} — Archivo de Chile`"
+            :content="`${props.tag.data.name} — Chile de Ayer`"
         />
         <meta
             property="og:description"

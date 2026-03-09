@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             name="description"
             content="Personas identificadas en fotografías históricas de Chile. Figuras históricas y ciudadanos del patrimonio visual chileno."
         />
-        <meta property="og:title" content="Personas — Archivo de Chile" />
+        <meta property="og:title" content="Personas — Chile de Ayer" />
         <meta
             property="og:description"
             content="Personas identificadas en fotografías históricas de Chile."
@@ -36,13 +36,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         :schema="{
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
-            name: 'Personas — Archivo de Chile',
+            name: 'Personas — Chile de Ayer',
             description:
                 'Personas identificadas en fotografías históricas de Chile. Figuras históricas y ciudadanos del patrimonio visual chileno.',
             url: 'https://chiledeayer.cl/persons',
             isPartOf: {
                 '@type': 'WebSite',
-                name: 'Archivo de Chile',
+                name: 'Chile de Ayer',
                 url: 'https://chiledeayer.cl',
             },
         }"

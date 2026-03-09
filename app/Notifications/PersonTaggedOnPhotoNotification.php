@@ -47,7 +47,7 @@ class PersonTaggedOnPhotoNotification extends Notification implements ShouldQueu
             ->greeting('Hola '.$notifiable->name.'!')
             ->line($this->taggerName.' etiquetó a '.$this->personName.' en tu foto.')
             ->action('Ver foto', url(route('photos.show', $this->photoId)))
-            ->line('Gracias por ser parte de Archivo de Chile.');
+            ->line('Gracias por ser parte de Chile de Ayer.');
     }
 
     /**

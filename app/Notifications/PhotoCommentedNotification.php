@@ -49,7 +49,7 @@ class PhotoCommentedNotification extends Notification implements ShouldQueue
             ->line($this->commenterName.' comentó en tu foto:')
             ->line('"'.Str::limit($this->commentBody, 100).'"')
             ->action('Ver foto', url(route('photos.show', $this->photoId)))
-            ->line('Gracias por ser parte de Archivo de Chile.');
+            ->line('Gracias por ser parte de Chile de Ayer.');
     }
 
     /**

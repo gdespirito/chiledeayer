@@ -5,7 +5,7 @@ import { createApp, h } from 'vue';
 import '../css/app.css';
 import { initializeTheme } from '@/composables/useAppearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Archivo de Chile';
+const appName = import.meta.env.VITE_APP_NAME || 'Chile de Ayer';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

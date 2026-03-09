@@ -14,7 +14,7 @@ Recibimos tu mensaje y te responderemos lo antes posible. A continuación, una c
 ---
 
 <x-mail::button :url="config('app.url')">
-Visitar Archivo de Chile
+Visitar Chile de Ayer
 </x-mail::button>
 
 Gracias,<br>

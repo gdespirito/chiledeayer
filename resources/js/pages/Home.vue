@@ -88,7 +88,7 @@ function getHelpNeeded(photo: Photo): HelpNeeded[] {
 const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Archivo de Chile',
+    name: 'Chile de Ayer',
     url: 'https://chiledeayer.cl',
     description:
         'Archivo fotográfico histórico de Chile. Fotos antiguas de ciudades, personas y lugares de Chile.',
@@ -143,7 +143,7 @@ const exploreLinks = [
         />
         <meta
             property="og:title"
-            content="Archivo de Chile — Fotografías históricas"
+            content="Chile de Ayer — Fotografías históricas"
         />
         <meta
             property="og:description"
@@ -162,7 +162,7 @@ const exploreLinks = [
                 <h1
                     class="mb-4 text-4xl font-bold tracking-tight text-stone-900 lg:text-5xl dark:text-stone-100"
                 >
-                    Archivo de Chile
+                    Chile de Ayer
                 </h1>
                 <p
                     class="mb-2 max-w-2xl text-lg text-stone-600 dark:text-stone-400"

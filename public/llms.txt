@@ -1,4 +1,4 @@
-# Archivo de Chile
+# Chile de Ayer
 
 > Archivo fotográfico histórico de Chile. Fotos antiguas de ciudades, personas y lugares de Chile, organizadas con datos de época, ubicación geográfica y contexto histórico. Cualquier persona puede contribuir subiendo y catalogando fotografías.
 
@@ -20,4 +20,4 @@ Cualquier persona puede crear una cuenta gratuita y contribuir subiendo fotos hi
 
 ## Acerca de
 
-Archivo de Chile es un proyecto colaborativo para preservar y compartir la memoria visual de Chile. Las fotografías abarcan desde el siglo XIX hasta mediados del siglo XX, cubriendo ciudades, paisajes, personajes y eventos históricos del país.
+Chile de Ayer es un proyecto colaborativo para preservar y compartir la memoria visual de Chile. Las fotografías abarcan desde el siglo XIX hasta mediados del siglo XX, cubriendo ciudades, paisajes, personajes y eventos históricos del país.

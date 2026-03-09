@@ -143,7 +143,7 @@ watch([yearFrom, yearTo], () => {
             name="description"
             content="Mapa interactivo de fotografías históricas de Chile. Explora fotos por ubicación geográfica y rango temporal."
         />
-        <meta property="og:title" content="Mapa — Archivo de Chile" />
+        <meta property="og:title" content="Mapa — Chile de Ayer" />
         <meta
             property="og:description"
             content="Mapa interactivo de fotografías históricas de Chile."

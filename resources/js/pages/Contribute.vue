@@ -37,7 +37,7 @@ const steps = [
 const howToSchema = {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
-    name: 'Cómo contribuir al Archivo de Chile',
+    name: 'Cómo contribuir al Chile de Ayer',
     description:
         'Guía para contribuir al archivo fotográfico histórico de Chile. Sube fotografías históricas, identifica lugares, etiqueta y ayuda a preservar la memoria visual.',
     step: steps.map((s, i) => ({
@@ -53,12 +53,12 @@ const howToSchema = {
         <meta
             head-key="description"
             name="description"
-            content="Contribuye al Archivo de Chile. Sube fotografías históricas, identifica lugares, etiqueta y ayuda a preservar la memoria visual de Chile."
+            content="Contribuye al Chile de Ayer. Sube fotografías históricas, identifica lugares, etiqueta y ayuda a preservar la memoria visual de Chile."
         />
-        <meta property="og:title" content="Contribuir — Archivo de Chile" />
+        <meta property="og:title" content="Contribuir — Chile de Ayer" />
         <meta
             property="og:description"
-            content="Descubre cómo puedes contribuir al Archivo de Chile. Sube fotos históricas, identifica lugares y gana reconocimiento."
+            content="Descubre cómo puedes contribuir al Chile de Ayer. Sube fotos históricas, identifica lugares y gana reconocimiento."
         />
         <meta property="og:type" content="website" />
     </Head>
@@ -85,7 +85,7 @@ const howToSchema = {
                 <p
                     class="mb-6 max-w-2xl text-lg text-stone-600 dark:text-stone-400"
                 >
-                    El Archivo de Chile es un proyecto colaborativo y gratuito.
+                    El Chile de Ayer es un proyecto colaborativo y gratuito.
                     Cualquier persona puede contribuir a preservar la memoria
                     visual del país, desde la comodidad de su casa o recorriendo
                     las calles.

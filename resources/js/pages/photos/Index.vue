@@ -58,7 +58,7 @@ function formatDateRange(photo: Photo): string {
             name="description"
             content="Explora la colección de fotografías históricas de Chile. Imágenes de archivo que capturan la historia y cultura chilena."
         />
-        <meta property="og:title" content="Fotos — Archivo de Chile" />
+        <meta property="og:title" content="Fotos — Chile de Ayer" />
         <meta
             property="og:description"
             content="Explora la colección de fotografías históricas de Chile."
@@ -74,7 +74,7 @@ function formatDateRange(photo: Photo): string {
             url: 'https://chiledeayer.cl/photos',
             isPartOf: {
                 '@type': 'WebSite',
-                name: 'Archivo de Chile',
+                name: 'Chile de Ayer',
                 url: 'https://chiledeayer.cl',
             },
         }"

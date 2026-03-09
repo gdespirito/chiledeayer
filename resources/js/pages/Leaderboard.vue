@@ -24,12 +24,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         <meta
             head-key="description"
             name="description"
-            content="Tabla de honor de los mayores contribuyentes del Archivo de Chile. Ranking por puntos e insignias."
+            content="Tabla de honor de los mayores contribuyentes del Chile de Ayer. Ranking por puntos e insignias."
         />
-        <meta property="og:title" content="Ranking — Archivo de Chile" />
+        <meta property="og:title" content="Ranking — Chile de Ayer" />
         <meta
             property="og:description"
-            content="Tabla de honor de los mayores contribuyentes del Archivo de Chile."
+            content="Tabla de honor de los mayores contribuyentes del Chile de Ayer."
         />
     </Head>
 

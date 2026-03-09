@@ -43,12 +43,12 @@ function submit() {
         <meta
             head-key="description"
             name="description"
-            content="Contacta al equipo de Archivo de Chile. Envíanos tus consultas, sugerencias o comentarios."
+            content="Contacta al equipo de Chile de Ayer. Envíanos tus consultas, sugerencias o comentarios."
         />
-        <meta property="og:title" content="Contacto — Archivo de Chile" />
+        <meta property="og:title" content="Contacto — Chile de Ayer" />
         <meta
             property="og:description"
-            content="Contacta al equipo de Archivo de Chile."
+            content="Contacta al equipo de Chile de Ayer."
         />
     </Head>
 

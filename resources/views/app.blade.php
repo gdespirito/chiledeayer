@@ -30,10 +30,10 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Archivo de Chile') }}</title>
+        <title inertia>{{ config('app.name', 'Chile de Ayer') }}</title>
 
         <meta name="description" inertia content="Explora fotografías históricas de Chile. Un archivo colaborativo del patrimonio visual chileno.">
-        <meta property="og:site_name" content="Archivo de Chile">
+        <meta property="og:site_name" content="Chile de Ayer">
         <meta property="og:locale" content="es_CL">
         <meta property="og:type" inertia content="website">
         <meta property="og:image" inertia content="{{ asset('og-image.png') }}">

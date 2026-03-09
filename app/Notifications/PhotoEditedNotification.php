@@ -52,7 +52,7 @@ class PhotoEditedNotification extends Notification implements ShouldQueue
             ->line($this->editorName.' editó los datos de tu foto.')
             ->line('Campos modificados: '.$changedFields)
             ->action('Ver foto', url(route('photos.show', $this->photoId)))
-            ->line('Gracias por ser parte de Archivo de Chile.');
+            ->line('Gracias por ser parte de Chile de Ayer.');
     }
 
     /**

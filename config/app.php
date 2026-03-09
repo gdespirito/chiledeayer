@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Archivo de Chile'),
+    'name' => env('APP_NAME', 'Chile de Ayer'),
 
     /*
     |--------------------------------------------------------------------------

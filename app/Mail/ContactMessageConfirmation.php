@@ -18,7 +18,7 @@ class ContactMessageConfirmation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Recibimos tu mensaje — Archivo de Chile',
+            subject: 'Recibimos tu mensaje — Chile de Ayer',
         );
     }
 

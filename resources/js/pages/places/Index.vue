@@ -27,7 +27,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             name="description"
             content="Descubre lugares históricos de Chile a través de fotografías de archivo. Ciudades, pueblos y rincones del patrimonio chileno."
         />
-        <meta property="og:title" content="Lugares — Archivo de Chile" />
+        <meta property="og:title" content="Lugares — Chile de Ayer" />
         <meta
             property="og:description"
             content="Descubre lugares históricos de Chile a través de fotografías de archivo."
@@ -43,7 +43,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             url: 'https://chiledeayer.cl/places',
             isPartOf: {
                 '@type': 'WebSite',
-                name: 'Archivo de Chile',
+                name: 'Chile de Ayer',
                 url: 'https://chiledeayer.cl',
             },
         }"
