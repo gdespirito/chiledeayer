@@ -95,7 +95,8 @@ composer run setup            # Install deps, generate key, migrate, build front
 - **Live site**: `https://chiledeayer.freshwork.dev`.
 - **Auto-deploy**: Push to `main` triggers GitHub Actions → build & push to `registry.freshwork.dev/chiledeayer:latest` → deploy to k8s cluster via webhook.
 - **Docker**: 3-stage build (composer deps → frontend build → final alpine image with nginx+supervisor).
-- **K8s**: Manifest at `~/code/k8s-infra/clusters/lab/apps/chiledeayer.yaml`. Uses MariaDB operator CRs, SealedSecrets, Ingress with cert-manager TLS.
+- **K8s infra repo**: `~/code/k8s-infra` — all k8s manifests live here, NOT in this repo.
+- **App manifest**: `~/code/k8s-infra/clusters/lab/apps/chiledeayer.yaml`. Uses MariaDB operator CRs, SealedSecrets, Ingress with cert-manager TLS.
 - **kubectl context**: `admin@freshwork` (always use this context for k8s operations).
 
 ---
