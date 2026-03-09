@@ -1,0 +1,11 @@
+[     335ms] [ERROR] TypeError: Cannot read properties of null (reading 'name')
+    at Proxy.<anonymous> (https://chiledeayer.freshwork.dev/build/assets/AppLayout.vue_vue_type_script_setup_true_lang-BHVNf4jZ.js:1:109735)
+    at jo (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:84:12568)
+    at Kd.V [as fn] (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:84:22359)
+    at Kd.run (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:82:9199)
+    at N (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:84:22744)
+    at H (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:84:21311)
+    at j (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:84:21083)
+    at h (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:84:17786)
+    at I (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:84:19387)
+    at P (https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:84:20789) @ https://chiledeayer.freshwork.dev/build/assets/app-BK3ebokb.js:81

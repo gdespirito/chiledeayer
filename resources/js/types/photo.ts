@@ -74,8 +74,21 @@ export type Photo = {
     tags: Tag[];
     persons?: Person[];
     comparisons?: ComparisonPhoto[];
+    upvotes_count: number;
+    downvotes_count: number;
+    score: number;
     created_at: string;
     updated_at: string;
+};
+
+export type Comment = {
+    id: number;
+    body: string;
+    user: {
+        id: number;
+        name: string;
+    };
+    created_at: string;
 };
 
 export type Level = {

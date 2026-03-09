@@ -37,7 +37,7 @@ import {
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { getInitials } from '@/composables/useInitials';
-import { home, leaderboard, map } from '@/routes';
+import { home, leaderboard, login, map, register, search } from '@/routes';
 import { index as photosIndex, create as photosCreate } from '@/routes/photos';
 import { index as placesIndex } from '@/routes/places';
 import type { BreadcrumbItem, NavItem } from '@/types';
@@ -152,6 +152,25 @@ const authNavItems = computed<NavItem[]>(() => {
                                         {{ item.title }}
                                     </Link>
                                 </nav>
+
+                                <!-- Guest mobile links -->
+                                <div
+                                    v-if="!auth?.user"
+                                    class="-mx-3 space-y-1 border-t pt-4"
+                                >
+                                    <Link
+                                        :href="login().url"
+                                        class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
+                                    >
+                                        Iniciar sesión
+                                    </Link>
+                                    <Link
+                                        :href="register().url"
+                                        class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
+                                    >
+                                        Registrarse
+                                    </Link>
+                                </div>
                             </div>
                         </SheetContent>
                     </Sheet>
@@ -201,44 +220,75 @@ const authNavItems = computed<NavItem[]>(() => {
 
                 <div class="ml-auto flex items-center space-x-2">
                     <div class="relative flex items-center space-x-1">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            class="group h-9 w-9 cursor-pointer"
-                        >
-                            <Search
-                                class="size-5 opacity-80 group-hover:opacity-100"
-                            />
-                        </Button>
-                    </div>
-
-                    <DropdownMenu>
-                        <DropdownMenuTrigger :as-child="true">
+                        <Link :href="search().url">
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                class="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
+                                class="group h-9 w-9 cursor-pointer"
                             >
-                                <Avatar
-                                    class="size-8 overflow-hidden rounded-full"
-                                >
-                                    <AvatarImage
-                                        v-if="auth.user.avatar"
-                                        :src="auth.user.avatar"
-                                        :alt="auth.user.name"
-                                    />
-                                    <AvatarFallback
-                                        class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
-                                    >
-                                        {{ getInitials(auth.user?.name) }}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <Search
+                                    class="size-5 opacity-80 group-hover:opacity-100"
+                                />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        </Link>
+                    </div>
+
+                    <!-- Authenticated user: upload button + avatar dropdown -->
+                    <template v-if="auth?.user">
+                        <Link
+                            :href="photosCreate().url"
+                            class="hidden lg:block"
+                        >
+                            <Button
+                                class="cursor-pointer bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
+                            >
+                                <ImagePlus class="mr-2 h-4 w-4" />
+                                Subir foto
+                            </Button>
+                        </Link>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger :as-child="true">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    class="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
+                                >
+                                    <Avatar
+                                        class="size-8 overflow-hidden rounded-full"
+                                    >
+                                        <AvatarImage
+                                            v-if="auth.user.avatar"
+                                            :src="auth.user.avatar"
+                                            :alt="auth.user.name"
+                                        />
+                                        <AvatarFallback
+                                            class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
+                                        >
+                                            {{ getInitials(auth.user?.name) }}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" class="w-56">
+                                <UserMenuContent :user="auth.user" />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </template>
+
+                    <!-- Guest user: login + register buttons -->
+                    <template v-else>
+                        <Link :href="login().url">
+                            <Button variant="ghost" class="cursor-pointer">
+                                Iniciar sesión
+                            </Button>
+                        </Link>
+                        <Link :href="register().url">
+                            <Button class="cursor-pointer">
+                                Registrarse
+                            </Button>
+                        </Link>
+                    </template>
                 </div>
             </div>
         </div>

@@ -267,7 +267,7 @@ const userHasComparison = computed(() => {
                             class="flex items-center gap-2 text-sm font-medium"
                         >
                             <Camera class="size-4 text-muted-foreground" />
-                            Fuente / Credito
+                            Fuente / Crédito
                         </div>
                         <p class="text-sm text-muted-foreground">
                             {{ photo.source_credit }}

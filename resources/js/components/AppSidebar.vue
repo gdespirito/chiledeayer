@@ -88,7 +88,7 @@ const authNavItems = computed<NavItem[]>(() => {
             />
         </SidebarContent>
 
-        <SidebarFooter>
+        <SidebarFooter v-if="$page.props.auth.user">
             <NavUser />
         </SidebarFooter>
     </Sidebar>
