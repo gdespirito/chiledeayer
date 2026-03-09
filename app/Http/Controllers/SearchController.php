@@ -45,10 +45,16 @@ class SearchController extends Controller
             }
         }
 
-        $searchQuery = Photo::search($query);
+        $options = [];
 
         if (! empty($filters)) {
-            $searchQuery->options(['filter' => implode(' AND ', $filters)]);
+            $options['filter'] = implode(' AND ', $filters);
+        }
+
+        $searchQuery = Photo::search($query);
+
+        if (! empty($options)) {
+            $searchQuery->options($options);
         }
 
         $photos = $searchQuery
@@ -56,15 +62,37 @@ class SearchController extends Controller
             ->paginate(24)
             ->appends($request->query());
 
+        // Get facet distribution from Meilisearch
+        $facetQuery = Photo::search($query);
+        $facetOptions = array_merge($options, [
+            'facets' => ['place_name', 'tags'],
+            'limit' => 0,
+        ]);
+        $facetQuery->options($facetOptions);
+        $rawResults = $facetQuery->raw();
+        $facetDistribution = $rawResults['facetDistribution'] ?? [];
+
         $places = Place::query()
             ->has('photos')
             ->orderBy('name')
-            ->get(['id', 'name', 'slug']);
+            ->get(['id', 'name', 'slug'])
+            ->map(fn (Place $p) => [
+                'id' => $p->id,
+                'name' => $p->name,
+                'slug' => $p->slug,
+                'count' => $facetDistribution['place_name'][$p->name] ?? 0,
+            ]);
 
         $tags = Tag::query()
             ->has('photos')
             ->orderBy('name')
-            ->get(['id', 'name', 'slug']);
+            ->get(['id', 'name', 'slug'])
+            ->map(fn (Tag $t) => [
+                'id' => $t->id,
+                'name' => $t->name,
+                'slug' => $t->slug,
+                'count' => $facetDistribution['tags'][$t->name] ?? 0,
+            ]);
 
         return Inertia::render('Search', [
             'photos' => PhotoResource::collection($photos),

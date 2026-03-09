@@ -18,8 +18,8 @@ type Props = {
         tag: string | null;
     };
     facets: {
-        places: Pick<Place, 'id' | 'name' | 'slug'>[];
-        tags: Pick<Tag, 'id' | 'name' | 'slug'>[];
+        places: (Pick<Place, 'id' | 'name' | 'slug'> & { count: number })[];
+        tags: (Pick<Tag, 'id' | 'name' | 'slug'> & { count: number })[];
     };
 };
 
@@ -185,7 +185,7 @@ function clearAllFilters(): void {
                             <button
                                 v-for="place in props.facets.places"
                                 :key="place.id"
-                                class="block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent"
+                                class="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent"
                                 :class="{
                                     'bg-accent font-medium':
                                         props.filters.place === place.slug,
@@ -199,7 +199,10 @@ function clearAllFilters(): void {
                                     })
                                 "
                             >
-                                {{ place.name }}
+                                <span>{{ place.name }}</span>
+                                <span class="text-xs text-muted-foreground">
+                                    {{ place.count }}
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -245,7 +248,7 @@ function clearAllFilters(): void {
                             <button
                                 v-for="tag in props.facets.tags"
                                 :key="tag.id"
-                                class="block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent"
+                                class="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent"
                                 :class="{
                                     'bg-accent font-medium':
                                         props.filters.tag === tag.slug,
@@ -259,7 +262,10 @@ function clearAllFilters(): void {
                                     })
                                 "
                             >
-                                {{ tag.name }}
+                                <span>{{ tag.name }}</span>
+                                <span class="text-xs text-muted-foreground">
+                                    {{ tag.count }}
+                                </span>
                             </button>
                         </div>
                     </div>
