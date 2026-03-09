@@ -17,6 +17,7 @@ use App\Http\Controllers\PersonTagController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PhotoMetadataController;
 use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\PlaceStoreController;
 use App\Http\Controllers\PlaceSuggestionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
@@ -73,6 +74,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('photos/{photo}/comparisons', [ComparisonPhotoController::class, 'store'])->name('photos.comparisons.store');
     Route::post('photos/{photo}/persons', [PersonTagController::class, 'store'])->name('photos.persons.store');
     Route::delete('photos/{photo}/persons/{person}', [PersonTagController::class, 'destroy'])->name('photos.persons.destroy');
+
+    Route::post('api/places', PlaceStoreController::class)->name('places.store');
 
     Route::get('api/google-places/autocomplete', [GooglePlacesController::class, 'autocomplete'])->name('api.google-places.autocomplete');
     Route::get('api/google-places/details', [GooglePlacesController::class, 'details'])->name('api.google-places.details');
