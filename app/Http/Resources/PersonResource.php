@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagResource extends JsonResource
+class PersonResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,15 @@ class TagResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'type' => $this->type,
             'slug' => $this->slug,
+            'bio' => $this->bio,
             'photos_count' => $this->whenCounted('photos'),
+            'pivot' => $this->whenPivotLoaded('person_photo', fn () => [
+                'x' => $this->pivot->x,
+                'y' => $this->pivot->y,
+                'label' => $this->pivot->label,
+            ]),
         ];
     }
 }

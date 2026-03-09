@@ -1,9 +1,15 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\GooglePlacesController;
+use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\PersonController;
+use App\Http\Controllers\PersonTagController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PhotoMetadataController;
+use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -13,6 +19,17 @@ Route::inertia('/', 'Welcome', [
 ])->name('home');
 
 Route::get('photos', [PhotoController::class, 'index'])->name('photos.index');
+Route::get('places', [PlaceController::class, 'index'])->name('places.index');
+Route::get('places/{place:slug}', [PlaceController::class, 'show'])->name('places.show');
+Route::get('tags', [TagController::class, 'index'])->name('tags.index');
+Route::get('tags/{tag:slug}', [TagController::class, 'show'])->name('tags.show');
+Route::get('persons', [PersonController::class, 'index'])->name('persons.index');
+Route::get('persons/{person}', [PersonController::class, 'show'])->name('persons.show');
+
+Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
+
+Route::get('api/places/search', [PlaceController::class, 'search'])->name('api.places.search');
+Route::get('api/tags/search', [TagController::class, 'search'])->name('api.tags.search');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
@@ -25,6 +42,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('photos/{photo}/vote', [VoteController::class, 'store'])->name('photos.vote.store');
     Route::put('photos/{photo}/metadata', [PhotoMetadataController::class, 'update'])->name('photos.metadata.update');
     Route::post('photos/{photo}/report', [ReportController::class, 'store'])->name('photos.report.store');
+    Route::post('photos/{photo}/persons', [PersonTagController::class, 'store'])->name('photos.persons.store');
+    Route::delete('photos/{photo}/persons/{person}', [PersonTagController::class, 'destroy'])->name('photos.persons.destroy');
+
+    Route::get('api/google-places/autocomplete', [GooglePlacesController::class, 'autocomplete'])->name('api.google-places.autocomplete');
+    Route::get('api/google-places/details', [GooglePlacesController::class, 'details'])->name('api.google-places.details');
 });
 
 Route::get('photos/{photo}', [PhotoController::class, 'show'])->name('photos.show');

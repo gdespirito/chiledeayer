@@ -33,6 +33,7 @@ class Photo extends Model
         'phash',
         'upvotes_count',
         'downvotes_count',
+        'featured_at',
     ];
 
     /**
@@ -49,6 +50,7 @@ class Photo extends Model
             'pitch' => 'float',
             'upvotes_count' => 'integer',
             'downvotes_count' => 'integer',
+            'featured_at' => 'datetime',
         ];
     }
 
@@ -120,6 +122,18 @@ class Photo extends Model
     public function revisions(): MorphMany
     {
         return $this->morphMany(Revision::class, 'revisionable');
+    }
+
+    /**
+     * Get the persons tagged in this photo.
+     *
+     * @return BelongsToMany<Person, $this>
+     */
+    public function persons(): BelongsToMany
+    {
+        return $this->belongsToMany(Person::class, 'person_photo')
+            ->withPivot('x', 'y', 'label')
+            ->withTimestamps();
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'total_points',
     ];
 
     /**
@@ -68,6 +70,38 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the point transactions for this user.
+     *
+     * @return HasMany<PointTransaction, $this>
+     */
+    public function pointTransactions(): HasMany
+    {
+        return $this->hasMany(PointTransaction::class);
+    }
+
+    /**
+     * Get the badges earned by this user.
+     *
+     * @return BelongsToMany<Badge, $this>
+     */
+    public function badges(): BelongsToMany
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')
+            ->withPivot('awarded_at');
+    }
+
+    /**
+     * Get the user's current level based on total_points.
+     */
+    public function currentLevel(): ?Level
+    {
+        return Level::query()
+            ->where('min_points', '<=', $this->total_points)
+            ->orderByDesc('min_points')
+            ->first();
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -78,6 +112,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'total_points' => 'integer',
         ];
     }
 }

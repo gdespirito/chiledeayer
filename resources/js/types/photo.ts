@@ -10,12 +10,14 @@ export type Place = {
     country: string | null;
     region: string | null;
     city: string | null;
+    photos_count?: number;
 };
 
 export type Tag = {
     id: number;
     name: string;
     slug: string;
+    photos_count?: number;
 };
 
 export type PhotoFile = {
@@ -24,6 +26,22 @@ export type PhotoFile = {
     url: string;
     width: number;
     height: number;
+};
+
+export type PersonPivot = {
+    x: number | null;
+    y: number | null;
+    label: string | null;
+};
+
+export type Person = {
+    id: number;
+    name: string;
+    type: 'public' | 'unknown';
+    slug: string | null;
+    bio: string | null;
+    photos_count?: number;
+    pivot?: PersonPivot;
 };
 
 export type Photo = {
@@ -39,8 +57,26 @@ export type Photo = {
     place: Place | null;
     files: PhotoFile[];
     tags: Tag[];
+    persons?: Person[];
     created_at: string;
     updated_at: string;
+};
+
+export type Level = {
+    id: number;
+    name: string;
+    min_points: number;
+    icon: string;
+};
+
+export type LeaderboardEntry = {
+    user: {
+        id: number;
+        name: string;
+    };
+    total_points: number;
+    level: Level | null;
+    badges_count: number;
 };
 
 export type PaginatedData<T> = {

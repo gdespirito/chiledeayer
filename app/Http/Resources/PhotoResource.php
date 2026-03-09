@@ -30,6 +30,7 @@ class PhotoResource extends JsonResource
             'place' => new PlaceResource($this->whenLoaded('place')),
             'files' => PhotoFileResource::collection($this->whenLoaded('files')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'persons' => PersonResource::collection($this->whenLoaded('persons')),
             'upvotes_count' => $this->upvotes_count,
             'downvotes_count' => $this->downvotes_count,
             'score' => $this->score(),

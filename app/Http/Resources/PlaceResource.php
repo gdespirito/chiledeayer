@@ -21,9 +21,12 @@ class PlaceResource extends JsonResource
             'type' => $this->type,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'google_place_id' => $this->google_place_id,
+            'bounding_box' => $this->bounding_box,
             'country' => $this->country,
             'region' => $this->region,
             'city' => $this->city,
+            'photos_count' => $this->whenCounted('photos'),
         ];
     }
 }

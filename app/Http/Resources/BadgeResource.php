@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagResource extends JsonResource
+class BadgeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,9 @@ class TagResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'key' => $this->key,
             'name' => $this->name,
-            'slug' => $this->slug,
-            'photos_count' => $this->whenCounted('photos'),
+            'description' => $this->description,
         ];
     }
 }
