@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { login } from '@/routes';
+import { login, register } from '@/routes';
 import { destroy as commentsDestroy } from '@/routes/comments';
 import { index as photosIndex, show as photosShow } from '@/routes/photos';
 import { store as commentsStore } from '@/routes/photos/comments';
@@ -699,6 +699,24 @@ function getUserInitials(name: string): string {
                             {{ comparison.description }}
                         </span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Guest registration banner -->
+            <div
+                v-if="!auth?.user"
+                class="flex items-center justify-between rounded-xl border border-dashed p-4"
+            >
+                <p class="text-sm text-muted-foreground">
+                    Inicia sesión o regístrate para contribuir en esta imagen.
+                </p>
+                <div class="flex gap-2">
+                    <Button size="sm" as-child>
+                        <a :href="login.url()">Iniciar sesión</a>
+                    </Button>
+                    <Button size="sm" variant="outline" as-child>
+                        <a :href="register.url()">Registrarse</a>
+                    </Button>
                 </div>
             </div>
 
