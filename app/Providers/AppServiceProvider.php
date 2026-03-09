@@ -77,6 +77,11 @@ class AppServiceProvider extends ServiceProvider
     protected function configureRateLimiting(): void
     {
         RateLimiter::for('uploads', function (Request $request) {
+            // Admin users get higher rate limit for bulk operations
+            if ($request->user()?->is_admin) {
+                return Limit::perMinute(30)->by($request->user()->id);
+            }
+
             return Limit::perHour(60)->by($request->user()?->id ?: $request->ip());
         });
     }
