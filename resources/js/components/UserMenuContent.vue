@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, router } from '@inertiajs/vue3';
-import { LogOut, Settings } from 'lucide-vue-next';
+import { LogOut, Settings, Star } from 'lucide-vue-next';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -29,6 +29,15 @@ defineProps<Props>();
             <UserInfo :user="user" :show-email="true" />
         </div>
     </DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuGroup>
+        <div
+            class="flex items-center gap-2 px-2 py-1.5 text-xs text-amber-700 dark:text-amber-400"
+        >
+            <Star class="size-3.5 fill-current" />
+            {{ user.total_points ?? 0 }} puntos
+        </div>
+    </DropdownMenuGroup>
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">

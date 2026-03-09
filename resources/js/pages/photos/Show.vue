@@ -494,6 +494,12 @@ function getUserInitials(name: string): string {
                         >
                             <MapPin class="size-4 text-muted-foreground" />
                             Lugar
+                            <span
+                                v-if="!photo.place"
+                                class="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-900/50 dark:text-amber-400"
+                            >
+                                +5 pts
+                            </span>
                         </div>
                         <template v-if="auth?.user">
                             <PlacePicker
@@ -602,6 +608,11 @@ function getUserInitials(name: string): string {
                         >
                             <ImagePlus class="mr-2 size-4" />
                             Subir foto del ahora
+                            <span
+                                class="ml-1.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-900/50 dark:text-amber-400"
+                            >
+                                +15 pts
+                            </span>
                         </Button>
                     </div>
                 </div>

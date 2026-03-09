@@ -9,6 +9,7 @@ import {
     MapPin,
     Menu,
     Search,
+    Star,
     Trophy,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -241,17 +242,29 @@ const authNavItems = computed<NavItem[]>(() => {
                         </Link>
                     </div>
 
-                    <!-- Authenticated user: upload button + avatar dropdown -->
+                    <!-- Authenticated user: points + upload button + avatar dropdown -->
                     <template v-if="auth?.user">
+                        <div
+                            class="hidden items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 lg:flex dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-400"
+                        >
+                            <Star class="size-3.5 fill-current" />
+                            {{ auth.user.total_points ?? 0 }} pts
+                        </div>
+
                         <Link
                             :href="photosCreate().url"
-                            class="hidden lg:block"
+                            class="hidden lg:flex lg:items-center lg:gap-2"
                         >
                             <Button
                                 class="cursor-pointer bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
                             >
                                 <ImagePlus class="mr-2 h-4 w-4" />
                                 Subir foto
+                                <span
+                                    class="ml-1.5 rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] leading-none"
+                                >
+                                    +10
+                                </span>
                             </Button>
                         </Link>
 
