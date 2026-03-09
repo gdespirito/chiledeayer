@@ -300,8 +300,11 @@ onBeforeUnmount(() => {
                 autofocus
             />
             <div
-                v-if="internalResults.length > 0"
-                class="max-h-40 overflow-y-auto rounded-md border"
+                v-if="
+                    internalResults.length > 0 ||
+                    (internalQuery.length >= 2 && !internalLoading)
+                "
+                class="max-h-48 overflow-y-auto rounded-md border"
             >
                 <button
                     v-for="place in internalResults"
@@ -318,27 +321,24 @@ onBeforeUnmount(() => {
                         {{ place.city }}
                     </span>
                 </button>
-            </div>
-            <p
-                v-else-if="internalQuery.length >= 2 && !internalLoading"
-                class="text-xs text-muted-foreground"
-            >
-                No se encontraron lugares.
-            </p>
-            <div class="flex items-center gap-2">
                 <button
-                    class="text-xs font-medium text-primary hover:underline"
+                    v-if="internalQuery.length >= 2 && !internalLoading"
+                    class="flex w-full items-center gap-2 border-t px-3 py-2 text-left text-xs text-primary hover:bg-accent"
                     @click="switchToGoogle"
                 >
-                    + Agregar lugar nuevo
-                </button>
-                <button
-                    class="text-xs text-muted-foreground hover:underline"
-                    @click="close"
-                >
-                    Cancelar
+                    <Search class="size-3 shrink-0" />
+                    <span>
+                        ¿No encuentras el lugar?
+                        <span class="font-medium">Agrégalo</span>
+                    </span>
                 </button>
             </div>
+            <button
+                class="text-xs text-muted-foreground hover:underline"
+                @click="close"
+            >
+                Cancelar
+            </button>
         </template>
 
         <!-- Google mode: Google Places autocomplete + map -->
