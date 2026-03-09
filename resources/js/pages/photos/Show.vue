@@ -134,6 +134,29 @@ function selectPlace(place: Place): void {
     );
 }
 
+// Place suggestion
+const showSuggestForm = ref(false);
+const suggestForm = useForm({
+    photo_id: photo.value.id,
+    name: '',
+    city: '',
+    region: '',
+    notes: '',
+});
+
+function submitSuggestion(): void {
+    suggestForm.post('/api/place-suggestions', {
+        preserveScroll: true,
+        onSuccess: () => {
+            showSuggestForm.value = false;
+            showPlaceSearch.value = false;
+            suggestForm.reset();
+            placeQuery.value = '';
+            placeResults.value = [];
+        },
+    });
+}
+
 function getDisplayImage(photo: Photo): string | null {
     const medium = photo.files.find((f) => f.variant === 'medium');
     const original = photo.files.find((f) => f.variant === 'original');
@@ -619,7 +642,91 @@ function getUserInitials(name: string): string {
                             >
                                 No se encontraron lugares.
                             </p>
+                            <!-- Suggest new place form -->
+                            <div v-if="!showSuggestForm">
+                                <button
+                                    class="text-xs font-medium text-primary hover:underline"
+                                    @click="
+                                        showSuggestForm = true;
+                                        suggestForm.name = placeQuery;
+                                    "
+                                >
+                                    + Sugerir un lugar nuevo
+                                </button>
+                            </div>
+                            <form
+                                v-if="showSuggestForm"
+                                class="space-y-2 rounded-md border p-3"
+                                @submit.prevent="submitSuggestion"
+                            >
+                                <div class="space-y-1">
+                                    <Label for="suggest-name"
+                                        >Nombre del lugar</Label
+                                    >
+                                    <Input
+                                        id="suggest-name"
+                                        v-model="suggestForm.name"
+                                        type="text"
+                                        placeholder="Ej: Palacio Cousiño"
+                                        required
+                                    />
+                                    <InputError
+                                        :message="suggestForm.errors.name"
+                                    />
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="space-y-1">
+                                        <Label for="suggest-city">Ciudad</Label>
+                                        <Input
+                                            id="suggest-city"
+                                            v-model="suggestForm.city"
+                                            type="text"
+                                            placeholder="Santiago"
+                                        />
+                                    </div>
+                                    <div class="space-y-1">
+                                        <Label for="suggest-region"
+                                            >Región</Label
+                                        >
+                                        <Input
+                                            id="suggest-region"
+                                            v-model="suggestForm.region"
+                                            type="text"
+                                            placeholder="Metropolitana"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <Label for="suggest-notes"
+                                        >Notas (opcional)</Label
+                                    >
+                                    <Input
+                                        id="suggest-notes"
+                                        v-model="suggestForm.notes"
+                                        type="text"
+                                        placeholder="Dirección aproximada, detalles..."
+                                    />
+                                </div>
+                                <div class="flex gap-2">
+                                    <Button
+                                        type="submit"
+                                        size="sm"
+                                        :disabled="suggestForm.processing"
+                                    >
+                                        Enviar sugerencia
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant="ghost"
+                                        @click="showSuggestForm = false"
+                                    >
+                                        Cancelar
+                                    </Button>
+                                </div>
+                            </form>
                             <button
+                                v-if="!showSuggestForm"
                                 class="text-xs text-muted-foreground hover:underline"
                                 @click="
                                     showPlaceSearch = false;

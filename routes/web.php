@@ -17,6 +17,7 @@ use App\Http\Controllers\PersonTagController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PhotoMetadataController;
 use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\PlaceSuggestionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
@@ -68,6 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('photos/{photo}/vote', [VoteController::class, 'store'])->name('photos.vote.store');
     Route::put('photos/{photo}/metadata', [PhotoMetadataController::class, 'update'])->name('photos.metadata.update');
     Route::post('photos/{photo}/report', [ReportController::class, 'store'])->name('photos.report.store');
+    Route::post('api/place-suggestions', [PlaceSuggestionController::class, 'store'])->name('place-suggestions.store');
     Route::post('photos/{photo}/comparisons', [ComparisonPhotoController::class, 'store'])->name('photos.comparisons.store');
     Route::post('photos/{photo}/persons', [PersonTagController::class, 'store'])->name('photos.persons.store');
     Route::delete('photos/{photo}/persons/{person}', [PersonTagController::class, 'destroy'])->name('photos.persons.destroy');
