@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\File;
+
+class StorePhotoRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'photo' => ['required', File::image()->max(20 * 1024)],
+            'description' => ['required', 'string', 'max:2000'],
+            'year_from' => ['required', 'integer', 'min:1800', 'max:'.date('Y')],
+            'year_to' => ['nullable', 'integer', 'min:1800', 'max:'.date('Y'), 'gte:year_from'],
+            'date_precision' => ['required', 'string', 'in:exact,year,decade,circa'],
+            'place_id' => ['nullable', 'exists:places,id'],
+            'source_credit' => ['nullable', 'string', 'max:500'],
+            'heading' => ['nullable', 'numeric', 'min:0', 'max:360'],
+            'pitch' => ['nullable', 'numeric', 'min:-90', 'max:90'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['string', 'max:100'],
+        ];
+    }
+}

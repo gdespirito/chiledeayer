@@ -59,14 +59,31 @@ composer run setup            # Install deps, generate key, migrate, build front
 - Test structure mirrors app: `tests/Feature/Auth/`, `tests/Feature/Settings/`.
 - Uses in-memory SQLite for tests (configured in `phpunit.xml`).
 
-## Storage (Minio / S3)
+## External Services
 
+### Database
+- **Local**: MariaDB 8.0.33 (root, no password, db: `chiledeayer`).
+- **Production**: MariaDB on k8s via operator CRs (namespace `mariadb`).
+- Tests use in-memory SQLite (`phpunit.xml`).
+
+### Queue
+- **Driver**: Redis, dedicated connection `queue` on DB 2 (isolated from default DB 0 and cache DB 1).
+
+### Storage (Minio / S3)
 - **Development**: Minio on k8s cluster at `https://storage.freshwork.dev` (S3-compatible, path-style).
 - **Minio console**: `https://minio-console.freshwork.dev`.
 - **Bucket**: `chiledeayer`.
 - **Production**: Cloudflare R2 (S3-compatible, no egress fees).
 - `.env` uses `FILESYSTEM_DISK=s3` with `AWS_*` vars pointing to Minio (dev) or R2 (prod).
 - Flysystem S3 adapter: `league/flysystem-aws-s3-v3`.
+
+### Search
+- **Engine**: Meilisearch v1.13 via Laravel Scout (NOT Algolia — self-hosted, no limits).
+- **Dev endpoint**: `https://meilisearch.freshwork.dev`.
+- **Production**: `http://meilisearch.chiledeayer.svc.cluster.local:7700` (in-cluster).
+
+### Google Places API
+- Used for location autocomplete (V2+). Key in `.env` as `GOOGLE_PLACES_API_KEY`.
 
 ## Debugging (autonomous Claude capabilities)
 
@@ -90,9 +107,15 @@ composer run setup            # Install deps, generate key, migrate, build front
 4. Navigate to affected page with Playwright to verify visually
 5. Check `last-error` and `browser-logs` for new errors
 
+## Development Workflow
+
+- **Parallel agents**: Use agents to parallelize building whenever possible. Launch independent tasks (models, controllers, tests, frontend pages) as concurrent agents.
+- **Eloquent Resources**: Always use Eloquent API Resources (`php artisan make:resource`) to send data from controllers to Inertia frontend. Never pass raw models/arrays directly.
+- **Commit often**: Commit and push frequently after completing logical chunks of work.
+
 ## Deployment
 
-- **Live site**: `https://chiledeayer.freshwork.dev`.
+- **Live site**: `https://chiledeayer.cl`.
 - **Auto-deploy**: Push to `main` triggers GitHub Actions → build & push to `registry.freshwork.dev/chiledeayer:latest` → deploy to k8s cluster via webhook.
 - **Docker**: 3-stage build (composer deps → frontend build → final alpine image with nginx+supervisor).
 - **K8s infra repo**: `~/code/k8s-infra` — all k8s manifests live here, NOT in this repo.
