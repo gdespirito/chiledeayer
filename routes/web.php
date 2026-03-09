@@ -1,10 +1,15 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\BatchUploadController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ComparisonPhotoController;
+use App\Http\Controllers\DuplicateCheckController;
 use App\Http\Controllers\GooglePlacesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\PersonTagController;
@@ -32,6 +37,9 @@ Route::get('persons/{person}', [PersonController::class, 'show'])->name('persons
 Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
 Route::get('users/{user}', [UserProfileController::class, 'show'])->name('users.show');
 
+Route::get('map', [MapController::class, 'index'])->name('map');
+Route::get('api/map/photos', [MapController::class, 'photos'])->name('api.map.photos');
+
 Route::get('api/places/search', [PlaceController::class, 'search'])->name('api.places.search');
 Route::get('api/tags/search', [TagController::class, 'search'])->name('api.tags.search');
 
@@ -40,6 +48,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('photos/create', [PhotoController::class, 'create'])->name('photos.create');
     Route::post('photos', [PhotoController::class, 'store'])->name('photos.store');
+
+    Route::get('photos/batch', [BatchUploadController::class, 'create'])->name('photos.batch.create');
+    Route::post('photos/batch', [BatchUploadController::class, 'store'])->name('photos.batch.store');
+    Route::post('api/photos/check-duplicate', [DuplicateCheckController::class, 'check'])->name('photos.duplicate.check');
 
     Route::post('photos/{photo}/comments', [CommentController::class, 'store'])->name('photos.comments.store');
     Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
@@ -56,6 +68,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('api/notifications', [NotificationController::class, 'index'])->name('api.notifications.index');
     Route::post('api/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('api.notifications.read-all');
     Route::post('api/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('api.notifications.read');
+
+    Route::get('api/tokens', [ApiTokenController::class, 'index'])->name('api.tokens.index');
+    Route::post('api/tokens', [ApiTokenController::class, 'store'])->name('api.tokens.store');
+    Route::delete('api/tokens/{token}', [ApiTokenController::class, 'destroy'])->name('api.tokens.destroy');
+});
+
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
+    Route::delete('photos/{photo}', [AdminController::class, 'deletePhoto'])->name('admin.photos.destroy');
+    Route::delete('comments/{comment}', [AdminController::class, 'deleteComment'])->name('admin.comments.destroy');
+    Route::post('users/{user}/ban', [AdminController::class, 'banUser'])->name('admin.users.ban');
+    Route::post('users/{user}/unban', [AdminController::class, 'unbanUser'])->name('admin.users.unban');
 });
 
 Route::get('photos/{photo}', [PhotoController::class, 'show'])->name('photos.show');

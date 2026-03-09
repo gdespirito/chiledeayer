@@ -65,6 +65,74 @@ class ProcessPhotoUpload implements ShouldQueue
 
         $this->generateVariant($contents, $mimeType, $originalWidth, $originalHeight, 'medium', 1200, $userId, $filename);
         $this->generateVariant($contents, $mimeType, $originalWidth, $originalHeight, 'thumb', 400, $userId, $filename);
+
+        $this->calculatePhash($contents);
+    }
+
+    /**
+     * Calculate and store a perceptual hash for the photo.
+     *
+     * Resizes the image to 8x8, converts to grayscale, and generates a
+     * 64-bit hash where each bit indicates whether a pixel is above or
+     * below the average luminance.
+     */
+    private function calculatePhash(string $contents): void
+    {
+        try {
+            $source = @imagecreatefromstring($contents);
+
+            if ($source === false) {
+                Log::warning('ProcessPhotoUpload: could not create image for pHash', [
+                    'photo_id' => $this->photo->id,
+                ]);
+
+                return;
+            }
+
+            $resized = imagescale($source, 8, 8);
+            imagedestroy($source);
+
+            if ($resized === false) {
+                Log::warning('ProcessPhotoUpload: imagescale failed for pHash', [
+                    'photo_id' => $this->photo->id,
+                ]);
+
+                return;
+            }
+
+            $pixels = [];
+
+            for ($y = 0; $y < 8; $y++) {
+                for ($x = 0; $x < 8; $x++) {
+                    $rgb = imagecolorat($resized, $x, $y);
+                    $r = ($rgb >> 16) & 0xFF;
+                    $g = ($rgb >> 8) & 0xFF;
+                    $b = $rgb & 0xFF;
+                    $pixels[] = (int) round(0.299 * $r + 0.587 * $g + 0.114 * $b);
+                }
+            }
+
+            imagedestroy($resized);
+
+            $average = array_sum($pixels) / count($pixels);
+
+            $bits = '';
+            foreach ($pixels as $pixel) {
+                $bits .= $pixel >= $average ? '1' : '0';
+            }
+
+            $hex = '';
+            for ($i = 0; $i < 64; $i += 4) {
+                $hex .= dechex(bindec(substr($bits, $i, 4)));
+            }
+
+            $this->photo->update(['phash' => $hex]);
+        } catch (\Throwable $e) {
+            Log::error('ProcessPhotoUpload: pHash calculation failed', [
+                'photo_id' => $this->photo->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
