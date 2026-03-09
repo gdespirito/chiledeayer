@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import L from 'leaflet';
+import { usePage } from '@inertiajs/vue3';
 import { MapPin, Search } from 'lucide-vue-next';
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useLeafletIcons } from '@/composables/useLeafletIcons';
 import type { Place } from '@/types';
 
 type Props = {
@@ -34,6 +33,8 @@ const emit = defineEmits<{
     'update:modelValue': [value: number | null];
     placed: [place: EmittedPlace];
 }>();
+
+const page = usePage();
 
 // Mode: 'idle' | 'search' | 'google'
 const mode = ref<'idle' | 'search' | 'google'>('idle');
@@ -89,13 +90,14 @@ watch(googleQuery, (query) => {
     }, 300);
 });
 
-// Confirmation flow: map → name
+// Google Maps for location confirmation
 const showMap = ref(false);
 const showNameStep = ref(false);
 const editableName = ref('');
 const mapContainer = ref<HTMLElement | null>(null);
-let map: L.Map | null = null;
-let marker: L.Marker | null = null;
+let gmap: google.maps.Map | null = null;
+let gmarker: google.maps.marker.AdvancedMarkerElement | null = null;
+
 const selectedGoogle = ref<{
     google_place_id: string;
     name: string;
@@ -106,6 +108,29 @@ const selectedGoogle = ref<{
     country: string;
 } | null>(null);
 const creatingPlace = ref(false);
+
+// Load Google Maps JS API dynamically
+let mapsLoaded = false;
+let mapsLoading: Promise<void> | null = null;
+
+function loadGoogleMaps(): Promise<void> {
+    if (mapsLoaded) return Promise.resolve();
+    if (mapsLoading) return mapsLoading;
+
+    mapsLoading = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${page.props.googleMapsApiKey}&libraries=marker`;
+        script.async = true;
+        script.onload = () => {
+            mapsLoaded = true;
+            resolve();
+        };
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+
+    return mapsLoading;
+}
 
 async function selectGooglePrediction(
     prediction: GooglePrediction,
@@ -145,44 +170,41 @@ async function selectGooglePrediction(
     showMap.value = true;
 
     await nextTick();
-    initMap(selectedGoogle.value.latitude, selectedGoogle.value.longitude);
+    await initMap(
+        selectedGoogle.value.latitude,
+        selectedGoogle.value.longitude,
+    );
 }
 
-function initMap(lat: number, lng: number): void {
-    useLeafletIcons();
+async function initMap(lat: number, lng: number): Promise<void> {
     if (!mapContainer.value) return;
-    if (map) {
-        map.remove();
-        map = null;
-    }
 
-    // Force container to have explicit pixel width before Leaflet measures it
-    const containerWidth = mapContainer.value.parentElement?.offsetWidth;
-    if (containerWidth) {
-        mapContainer.value.style.width = `${containerWidth}px`;
-    }
+    await loadGoogleMaps();
 
-    map = L.map(mapContainer.value).setView([lat, lng], 16);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
+    const position = { lat, lng };
 
-    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
-    marker.on('dragend', () => {
-        if (!marker || !selectedGoogle.value) return;
-        const pos = marker.getLatLng();
+    gmap = new google.maps.Map(mapContainer.value, {
+        center: position,
+        zoom: 16,
+        mapId: 'place-picker-map',
+        disableDefaultUI: true,
+        zoomControl: true,
+        gestureHandling: 'greedy',
+    });
+
+    gmarker = new google.maps.marker.AdvancedMarkerElement({
+        map: gmap,
+        position,
+        gmpDraggable: true,
+        title: 'Arrastra para ajustar',
+    });
+
+    gmarker.addListener('dragend', () => {
+        if (!gmarker?.position || !selectedGoogle.value) return;
+        const pos = gmarker.position as google.maps.LatLngLiteral;
         selectedGoogle.value.latitude = pos.lat;
         selectedGoogle.value.longitude = pos.lng;
     });
-
-    // Reset to fluid width and re-measure after layout settles
-    setTimeout(() => {
-        if (mapContainer.value) {
-            mapContainer.value.style.width = '';
-        }
-        map?.invalidateSize();
-        map?.setView([lat, lng], 16);
-    }, 200);
 }
 
 function confirmLocation(): void {
@@ -250,17 +272,13 @@ function close(): void {
     showNameStep.value = false;
     editableName.value = '';
     selectedGoogle.value = null;
-    if (map) {
-        map.remove();
-        map = null;
-    }
+    gmap = null;
+    gmarker = null;
 }
 
 onBeforeUnmount(() => {
-    if (map) {
-        map.remove();
-        map = null;
-    }
+    gmap = null;
+    gmarker = null;
 });
 </script>
 
@@ -416,10 +434,7 @@ onBeforeUnmount(() => {
                 <p class="text-xs text-muted-foreground">
                     Arrastra el pin para ajustar la ubicación exacta.
                 </p>
-                <div
-                    ref="mapContainer"
-                    class="h-48 w-full overflow-hidden rounded-md border"
-                />
+                <div ref="mapContainer" class="h-48 w-full rounded-md border" />
                 <div class="flex gap-2">
                     <Button size="sm" @click="confirmLocation">
                         Confirmar ubicación
