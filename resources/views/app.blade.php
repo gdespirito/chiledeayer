@@ -30,7 +30,11 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Archivo de Chile') }}</title>
+
+        <meta property="og:site_name" content="Archivo de Chile">
+        <meta property="og:locale" content="es_CL">
+        <meta name="description" content="Explora fotografias historicas de Chile. Un archivo colaborativo del patrimonio visual chileno.">
 
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-vue-next';
+import { Link, usePage } from '@inertiajs/vue3';
+import { Camera, Home, ImagePlus, Map, MapPin, Trophy } from 'lucide-vue-next';
+import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -14,29 +14,55 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { home, leaderboard, map } from '@/routes';
+import { index as photosIndex, create as photosCreate } from '@/routes/photos';
+import { index as placesIndex } from '@/routes/places';
 import type { NavItem } from '@/types';
+
+const page = usePage();
+const auth = computed(() => page.props.auth);
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
+        title: 'Inicio',
+        href: home(),
+        icon: Home,
+    },
+    {
+        title: 'Fotos',
+        href: photosIndex(),
+        icon: Camera,
+    },
+    {
+        title: 'Lugares',
+        href: placesIndex(),
+        icon: MapPin,
+    },
+    {
+        title: 'Mapa',
+        href: map(),
+        icon: Map,
+    },
+    {
+        title: 'Tabla de Honor',
+        href: leaderboard(),
+        icon: Trophy,
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+const authNavItems = computed<NavItem[]>(() => {
+    if (!auth.value?.user) {
+        return [];
+    }
+
+    return [
+        {
+            title: 'Subir Foto',
+            href: photosCreate(),
+            icon: ImagePlus,
+        },
+    ];
+});
 </script>
 
 <template>
@@ -45,7 +71,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link :href="home()">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
@@ -55,10 +81,14 @@ const footerNavItems: NavItem[] = [
 
         <SidebarContent>
             <NavMain :items="mainNavItems" />
+            <NavMain
+                v-if="authNavItems.length > 0"
+                :items="authNavItems"
+                label="Contribuir"
+            />
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>

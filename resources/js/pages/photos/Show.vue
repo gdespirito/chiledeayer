@@ -118,6 +118,25 @@ function formatPrecisionLabel(precision: Photo['date_precision']): string {
     }
 }
 
+const yearDisplay = computed(() => formatDateRange(props.photo));
+
+const ogTitle = computed(() => {
+    const desc = props.photo.description;
+
+    return desc.length > 70 ? desc.substring(0, 67) + '...' : desc;
+});
+
+const ogDescription = computed(
+    () => `${props.photo.description} (${yearDisplay.value})`,
+);
+
+const ogImage = computed(() => {
+    const medium = props.photo.files.find((f) => f.variant === 'medium');
+    const original = props.photo.files.find((f) => f.variant === 'original');
+
+    return medium?.url ?? original?.url ?? null;
+});
+
 const hasComparisons = computed(
     () => props.photo.comparisons && props.photo.comparisons.length > 0,
 );
@@ -134,7 +153,12 @@ const userHasComparison = computed(() => {
 </script>
 
 <template>
-    <Head :title="props.photo.description" />
+    <Head :title="`${ogTitle} — Archivo de Chile`">
+        <meta property="og:title" :content="ogTitle" />
+        <meta property="og:description" :content="ogDescription" />
+        <meta v-if="ogImage" property="og:image" :content="ogImage" />
+        <meta property="og:type" content="article" />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

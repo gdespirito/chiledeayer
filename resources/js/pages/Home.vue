@@ -1,12 +1,25 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ArrowRight, Camera, Search, Star, Users } from 'lucide-vue-next';
+import {
+    ArrowRight,
+    Camera,
+    Map,
+    MapPin,
+    Search,
+    Star,
+    Tag,
+    Trophy,
+    Users,
+} from 'lucide-vue-next';
 import { ref } from 'vue';
 import PhotoCard from '@/components/PhotoCard.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { leaderboard, map } from '@/routes';
 import { index as photosIndex } from '@/routes/photos';
+import { index as placesIndex } from '@/routes/places';
+import { index as tagsIndex } from '@/routes/tags';
 import type { Photo } from '@/types';
 
 type Props = {
@@ -33,6 +46,39 @@ function getThumbnail(photo: Photo): string | null {
 
     return medium?.url ?? original?.url ?? thumb?.url ?? null;
 }
+
+const exploreLinks = [
+    {
+        title: 'Explorar Fotos',
+        href: photosIndex(),
+        icon: Camera,
+        description: 'Navega el archivo fotografico completo',
+    },
+    {
+        title: 'Lugares',
+        href: placesIndex(),
+        icon: MapPin,
+        description: 'Descubre fotos por lugar',
+    },
+    {
+        title: 'Etiquetas',
+        href: tagsIndex(),
+        icon: Tag,
+        description: 'Busca por temas y categorias',
+    },
+    {
+        title: 'Mapa',
+        href: map(),
+        icon: Map,
+        description: 'Explora fotos en el mapa',
+    },
+    {
+        title: 'Tabla de Honor',
+        href: leaderboard(),
+        icon: Trophy,
+        description: 'Nuestros mayores contribuidores',
+    },
+];
 </script>
 
 <template>
@@ -42,15 +88,23 @@ function getThumbnail(photo: Photo): string | null {
         <div class="flex flex-1 flex-col">
             <!-- Hero Section -->
             <section
-                class="relative flex flex-col items-center justify-center px-4 py-16 text-center lg:py-24"
+                class="relative flex flex-col items-center justify-center bg-gradient-to-b from-amber-50/50 to-transparent px-4 py-16 text-center lg:py-24 dark:from-amber-950/10 dark:to-transparent"
             >
-                <h1 class="mb-4 text-4xl font-bold tracking-tight lg:text-5xl">
+                <h1
+                    class="mb-4 text-4xl font-bold tracking-tight text-stone-900 lg:text-5xl dark:text-stone-100"
+                >
                     Archivo de Chile
                 </h1>
-                <p class="mb-8 max-w-2xl text-lg text-muted-foreground">
-                    Un archivo colaborativo de fotografias historicas de Chile.
-                    Explora, contribuye y ayuda a preservar nuestra memoria
-                    visual.
+                <p
+                    class="mb-2 max-w-2xl text-lg text-stone-600 dark:text-stone-400"
+                >
+                    Descubre la historia visual de Chile
+                </p>
+                <p
+                    class="mb-8 max-w-2xl text-base text-stone-500 dark:text-stone-500"
+                >
+                    Un archivo colaborativo de fotografias historicas. Explora,
+                    contribuye y ayuda a preservar nuestra memoria visual.
                 </p>
 
                 <!-- Search Input -->
@@ -71,6 +125,32 @@ function getThumbnail(photo: Photo): string | null {
                     </div>
                     <Button type="submit">Buscar</Button>
                 </form>
+            </section>
+
+            <!-- Explore Links -->
+            <section class="px-4 pb-12 lg:px-8">
+                <div class="mx-auto max-w-6xl">
+                    <div
+                        class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"
+                    >
+                        <Link
+                            v-for="link in exploreLinks"
+                            :key="link.title"
+                            :href="link.href"
+                            class="group flex flex-col items-center gap-2 rounded-xl border border-stone-200/70 bg-stone-50/50 p-4 text-center transition-colors hover:border-amber-300 hover:bg-amber-50/50 dark:border-stone-800 dark:bg-stone-900/30 dark:hover:border-amber-700 dark:hover:bg-amber-950/20"
+                        >
+                            <component
+                                :is="link.icon"
+                                class="size-6 text-stone-400 transition-colors group-hover:text-amber-600 dark:text-stone-500 dark:group-hover:text-amber-400"
+                            />
+                            <span
+                                class="text-sm font-medium text-stone-700 dark:text-stone-300"
+                            >
+                                {{ link.title }}
+                            </span>
+                        </Link>
+                    </div>
+                </div>
             </section>
 
             <!-- Photo of the Day -->
@@ -121,7 +201,7 @@ function getThumbnail(photo: Photo): string | null {
                 <div class="mx-auto max-w-6xl">
                     <div class="mb-6 flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <Camera class="size-5 text-blue-500" />
+                            <Camera class="size-5 text-amber-600" />
                             <h2 class="text-2xl font-semibold tracking-tight">
                                 Recien agregadas
                             </h2>
@@ -154,7 +234,7 @@ function getThumbnail(photo: Photo): string | null {
                 <div class="mx-auto max-w-6xl">
                     <div class="mb-6 flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <Star class="size-5 text-yellow-500" />
+                            <Star class="size-5 text-amber-500" />
                             <h2 class="text-2xl font-semibold tracking-tight">
                                 Mas populares
                             </h2>
@@ -218,9 +298,11 @@ function getThumbnail(photo: Photo): string | null {
                 class="px-4 pb-12 lg:px-8"
             >
                 <div
-                    class="mx-auto flex max-w-6xl flex-col items-center justify-center rounded-xl border border-dashed border-sidebar-border/70 p-12 dark:border-sidebar-border"
+                    class="mx-auto flex max-w-6xl flex-col items-center justify-center rounded-xl border border-dashed border-stone-300 p-12 dark:border-stone-700"
                 >
-                    <Camera class="mb-4 size-12 text-muted-foreground" />
+                    <Camera
+                        class="mb-4 size-12 text-stone-400 dark:text-stone-600"
+                    />
                     <p class="text-lg font-medium">
                         Aun no hay fotos en el archivo
                     </p>

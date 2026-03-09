@@ -1,46 +1,116 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Camera, ImagePlus, Map, MapPin, Trophy } from 'lucide-vue-next';
+import { computed } from 'vue';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes';
+import { home, leaderboard, map } from '@/routes';
+import { create as photosCreate, index as photosIndex } from '@/routes/photos';
+import { index as placesIndex } from '@/routes/places';
 import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
+        title: 'Inicio',
+        href: home(),
+    },
+];
+
+const page = usePage();
+const user = computed(() => page.props.auth.user);
+
+const quickLinks = [
+    {
+        title: 'Explorar Fotos',
+        href: photosIndex(),
+        icon: Camera,
+        description: 'Navega el archivo completo',
+    },
+    {
+        title: 'Lugares',
+        href: placesIndex(),
+        icon: MapPin,
+        description: 'Fotos por ubicacion',
+    },
+    {
+        title: 'Mapa',
+        href: map(),
+        icon: Map,
+        description: 'Vista geografica',
+    },
+    {
+        title: 'Tabla de Honor',
+        href: leaderboard(),
+        icon: Trophy,
+        description: 'Ranking de contribuidores',
     },
 ];
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Panel" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div
-            class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-        >
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
+        <div class="flex flex-1 flex-col gap-6 p-4 lg:p-6">
+            <!-- Welcome -->
+            <div
+                class="rounded-xl border border-stone-200/70 bg-gradient-to-r from-amber-50/80 to-stone-50/50 p-6 lg:p-8 dark:border-stone-800 dark:from-amber-950/20 dark:to-stone-900/20"
+            >
+                <h1
+                    class="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100"
                 >
-                    <PlaceholderPattern />
-                </div>
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                >
-                    <PlaceholderPattern />
-                </div>
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                >
-                    <PlaceholderPattern />
+                    Bienvenido, {{ user.name }}
+                </h1>
+                <p class="mt-2 text-stone-600 dark:text-stone-400">
+                    Gracias por ser parte del Archivo de Chile. Tu contribucion
+                    ayuda a preservar nuestra memoria visual.
+                </p>
+                <div class="mt-6">
+                    <Button as-child>
+                        <Link :href="photosCreate()">
+                            <ImagePlus class="mr-2 size-4" />
+                            Subir foto
+                        </Link>
+                    </Button>
                 </div>
             </div>
-            <div
-                class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
+
+            <!-- Quick Links -->
+            <div>
+                <h2
+                    class="mb-4 text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100"
+                >
+                    Accesos rapidos
+                </h2>
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <Link
+                        v-for="link in quickLinks"
+                        :key="link.title"
+                        :href="link.href"
+                        class="group flex items-start gap-4 rounded-xl border border-stone-200/70 p-4 transition-colors hover:border-amber-300 hover:bg-amber-50/30 dark:border-stone-800 dark:hover:border-amber-700 dark:hover:bg-amber-950/10"
+                    >
+                        <div
+                            class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-stone-100 transition-colors group-hover:bg-amber-100 dark:bg-stone-800 dark:group-hover:bg-amber-900/30"
+                        >
+                            <component
+                                :is="link.icon"
+                                class="size-5 text-stone-500 transition-colors group-hover:text-amber-600 dark:text-stone-400 dark:group-hover:text-amber-400"
+                            />
+                        </div>
+                        <div>
+                            <p
+                                class="text-sm font-medium text-stone-900 dark:text-stone-100"
+                            >
+                                {{ link.title }}
+                            </p>
+                            <p
+                                class="mt-0.5 text-xs text-stone-500 dark:text-stone-500"
+                            >
+                                {{ link.description }}
+                            </p>
+                        </div>
+                    </Link>
+                </div>
             </div>
         </div>
     </AppLayout>
