@@ -30,13 +30,13 @@ const quickLinks = [
         title: 'Lugares',
         href: placesIndex(),
         icon: MapPin,
-        description: 'Fotos por ubicacion',
+        description: 'Fotos por ubicación',
     },
     {
         title: 'Mapa',
         href: map(),
         icon: Map,
-        description: 'Vista geografica',
+        description: 'Vista geográfica',
     },
     {
         title: 'Tabla de Honor',
@@ -62,7 +62,7 @@ const quickLinks = [
                     Bienvenido, {{ user.name }}
                 </h1>
                 <p class="mt-2 text-stone-600 dark:text-stone-400">
-                    Gracias por ser parte del Archivo de Chile. Tu contribucion
+                    Gracias por ser parte del Archivo de Chile. Tu contribución
                     ayuda a preservar nuestra memoria visual.
                 </p>
                 <div class="mt-6">
@@ -80,7 +80,7 @@ const quickLinks = [
                 <h2
                     class="mb-4 text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100"
                 >
-                    Accesos rapidos
+                    Accesos rápidos
                 </h2>
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <Link

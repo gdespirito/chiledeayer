@@ -40,7 +40,7 @@ function formatDateRange(photo: Photo): string {
                 ? `${photo.year_from}--${photo.year_to}`
                 : `${photo.year_from}`;
         case 'decade':
-            return `Decada de ${photo.year_from}`;
+            return `Década de ${photo.year_from}`;
         case 'circa':
             return `~${photo.year_from}`;
         default:
@@ -124,7 +124,7 @@ function formatDateRange(photo: Photo): string {
                 </p>
             </div>
 
-            <!-- Pagination -->
+            <!-- Págination -->
             <nav
                 v-if="props.photos.meta.last_page > 1"
                 class="flex items-center justify-center gap-2"
@@ -144,7 +144,7 @@ function formatDateRange(photo: Photo): string {
                 </span>
 
                 <span class="text-sm text-muted-foreground">
-                    Pagina {{ props.photos.meta.current_page }} de
+                    Página {{ props.photos.meta.current_page }} de
                     {{ props.photos.meta.last_page }}
                 </span>
 

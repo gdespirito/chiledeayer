@@ -111,7 +111,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </p>
             </div>
 
-            <!-- Pagination -->
+            <!-- Págination -->
             <nav
                 v-if="props.users.meta.last_page > 1"
                 class="flex items-center justify-center gap-2"
@@ -131,7 +131,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </span>
 
                 <span class="text-sm text-muted-foreground">
-                    Pagina {{ props.users.meta.current_page }} de
+                    Página {{ props.users.meta.current_page }} de
                     {{ props.users.meta.last_page }}
                 </span>
 

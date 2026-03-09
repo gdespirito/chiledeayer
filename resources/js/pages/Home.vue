@@ -52,7 +52,7 @@ const exploreLinks = [
         title: 'Explorar Fotos',
         href: photosIndex(),
         icon: Camera,
-        description: 'Navega el archivo fotografico completo',
+        description: 'Navega el archivo fotográfico completo',
     },
     {
         title: 'Lugares',
@@ -64,7 +64,7 @@ const exploreLinks = [
         title: 'Etiquetas',
         href: tagsIndex(),
         icon: Tag,
-        description: 'Busca por temas y categorias',
+        description: 'Busca por temas y categorías',
     },
     {
         title: 'Mapa',
@@ -103,7 +103,7 @@ const exploreLinks = [
                 <p
                     class="mb-8 max-w-2xl text-base text-stone-500 dark:text-stone-500"
                 >
-                    Un archivo colaborativo de fotografias historicas. Explora,
+                    Un archivo colaborativo de fotografías históricas. Explora,
                     contribuye y ayuda a preservar nuestra memoria visual.
                 </p>
 
@@ -159,7 +159,7 @@ const exploreLinks = [
                     <div class="mb-6 flex items-center gap-2">
                         <Star class="size-5 text-amber-500" />
                         <h2 class="text-2xl font-semibold tracking-tight">
-                            Foto del dia
+                            Foto del día
                         </h2>
                     </div>
                     <Link
@@ -203,7 +203,7 @@ const exploreLinks = [
                         <div class="flex items-center gap-2">
                             <Camera class="size-5 text-amber-600" />
                             <h2 class="text-2xl font-semibold tracking-tight">
-                                Recien agregadas
+                                Recién agregadas
                             </h2>
                         </div>
                         <Link
@@ -236,7 +236,7 @@ const exploreLinks = [
                         <div class="flex items-center gap-2">
                             <Star class="size-5 text-amber-500" />
                             <h2 class="text-2xl font-semibold tracking-tight">
-                                Mas populares
+                                Más populares
                             </h2>
                         </div>
                         <Link
@@ -304,10 +304,10 @@ const exploreLinks = [
                         class="mb-4 size-12 text-stone-400 dark:text-stone-600"
                     />
                     <p class="text-lg font-medium">
-                        Aun no hay fotos en el archivo
+                        Aún no hay fotos en el archivo
                     </p>
                     <p class="mt-1 text-sm text-muted-foreground">
-                        Se el primero en contribuir subiendo una foto historica.
+                        Sé el primero en contribuir subiendo una foto histórica.
                     </p>
                 </div>
             </section>

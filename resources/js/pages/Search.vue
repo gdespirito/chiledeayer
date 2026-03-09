@@ -139,7 +139,7 @@ function clearAllFilters(): void {
                     class="cursor-pointer gap-1"
                     @click="clearFilter('decade')"
                 >
-                    Decada: {{ props.filters.decade }}s
+                    Década: {{ props.filters.decade }}s
                     <X class="size-3" />
                 </Badge>
                 <Badge
@@ -202,7 +202,7 @@ function clearAllFilters(): void {
                         <h3
                             class="mb-3 text-sm font-medium text-muted-foreground"
                         >
-                            Decada
+                            Década
                         </h3>
                         <div class="max-h-48 space-y-1 overflow-y-auto">
                             <button
@@ -299,7 +299,7 @@ function clearAllFilters(): void {
                             </span>
 
                             <span class="text-sm text-muted-foreground">
-                                Pagina
+                                Página
                                 {{ props.photos.meta.current_page }}
                                 de
                                 {{ props.photos.meta.last_page }}
@@ -333,7 +333,7 @@ function clearAllFilters(): void {
                             No se encontraron resultados
                         </p>
                         <p class="mt-1 text-sm text-muted-foreground">
-                            Intenta con otros terminos de busqueda o ajusta los
+                            Intenta con otros términos de búsqueda o ajusta los
                             filtros.
                         </p>
                     </div>

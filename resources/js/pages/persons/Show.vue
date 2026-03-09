@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: props.person.data.name,
-        href: personsShow(props.person.data.slug ?? props.person.data.id),
+        href: personsShow(props.person.data.id),
     },
 ];
 

@@ -26,7 +26,7 @@ function formatDateRange(photo: Photo): string {
                 ? `${photo.year_from}--${photo.year_to}`
                 : `${photo.year_from}`;
         case 'decade':
-            return `Decada de ${photo.year_from}`;
+            return `Década de ${photo.year_from}`;
         case 'circa':
             return `~${photo.year_from}`;
         default:

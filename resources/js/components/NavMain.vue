@@ -16,7 +16,7 @@ withDefaults(
         label?: string;
     }>(),
     {
-        label: 'Navegacion',
+        label: 'Navegación',
     },
 );
 

@@ -32,7 +32,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <Link
                     v-for="person in props.persons.data"
                     :key="person.id"
-                    :href="personsShow(person.slug ?? person.id)"
+                    :href="personsShow(person.id)"
                     class="group overflow-hidden rounded-xl border border-sidebar-border/70 bg-card p-4 shadow-sm transition-shadow hover:shadow-md dark:border-sidebar-border"
                 >
                     <div class="space-y-1.5">

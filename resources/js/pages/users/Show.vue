@@ -221,7 +221,7 @@ function formatMemberSince(dateString: string): string {
                     </p>
                 </div>
 
-                <!-- Pagination -->
+                <!-- Págination -->
                 <nav
                     v-if="props.photos.meta.last_page > 1"
                     class="flex items-center justify-center gap-2"
@@ -241,7 +241,7 @@ function formatMemberSince(dateString: string): string {
                     </span>
 
                     <span class="text-sm text-muted-foreground">
-                        Pagina {{ props.photos.meta.current_page }} de
+                        Página {{ props.photos.meta.current_page }} de
                         {{ props.photos.meta.last_page }}
                     </span>
 
