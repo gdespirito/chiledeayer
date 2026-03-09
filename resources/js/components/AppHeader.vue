@@ -2,6 +2,7 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import {
     Camera,
+    Heart,
     Home,
     ImagePlus,
     Map,
@@ -159,6 +160,13 @@ const authNavItems = computed<NavItem[]>(() => {
                                     class="-mx-3 space-y-1 border-t pt-4"
                                 >
                                     <Link
+                                        href="/contribuir"
+                                        class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/30"
+                                    >
+                                        <Heart class="h-5 w-5" />
+                                        Contribuir
+                                    </Link>
+                                    <Link
                                         :href="login().url"
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
                                     >
@@ -276,8 +284,17 @@ const authNavItems = computed<NavItem[]>(() => {
                         </DropdownMenu>
                     </template>
 
-                    <!-- Guest user: login + register buttons -->
+                    <!-- Guest user: contribute + login + register buttons -->
                     <template v-else>
+                        <Link href="/contribuir" class="hidden lg:block">
+                            <Button
+                                variant="outline"
+                                class="cursor-pointer border-amber-500/50 text-amber-700 hover:bg-amber-50 dark:border-amber-400/50 dark:text-amber-400 dark:hover:bg-amber-950/30"
+                            >
+                                <Heart class="mr-2 h-4 w-4" />
+                                Contribuir
+                            </Button>
+                        </Link>
                         <Link :href="login().url">
                             <Button variant="ghost" class="cursor-pointer">
                                 Iniciar sesión

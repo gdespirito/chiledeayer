@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import {
     ArrowRight,
     Camera,
+    Heart,
     Map,
     MapPin,
     Search,
@@ -11,7 +12,7 @@ import {
     Trophy,
     Users,
 } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import PhotoCard from '@/components/PhotoCard.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +31,9 @@ type Props = {
 };
 
 const props = defineProps<Props>();
+
+const page = usePage();
+const isGuest = computed(() => !page.props.auth?.user);
 
 const searchQuery = ref('');
 
@@ -303,6 +307,44 @@ const exploreLinks = [
                             :key="photo.id"
                             :photo="photo"
                         />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contribute CTA banner (guests only) -->
+            <section v-if="isGuest" class="px-4 pb-12 lg:px-8">
+                <div
+                    class="mx-auto max-w-6xl overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 dark:border-amber-900/50 dark:from-amber-950/20 dark:to-orange-950/20"
+                >
+                    <div
+                        class="flex flex-col items-center gap-6 p-8 text-center md:flex-row md:text-left"
+                    >
+                        <div
+                            class="flex size-16 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30"
+                        >
+                            <Heart
+                                class="size-8 text-amber-600 dark:text-amber-400"
+                            />
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold tracking-tight">
+                                ¿Tienes fotos históricas? ¡Compártelas!
+                            </h3>
+                            <p class="mt-1 text-sm text-muted-foreground">
+                                Ayuda a preservar la memoria visual de Chile.
+                                Sube fotos, identifica lugares, comenta y gana
+                                reconocimiento.
+                            </p>
+                        </div>
+                        <div class="flex shrink-0 gap-3">
+                            <Link href="/contribuir">
+                                <Button
+                                    class="cursor-pointer bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
+                                >
+                                    Descubre cómo contribuir
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </section>

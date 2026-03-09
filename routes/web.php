@@ -46,6 +46,8 @@ Route::get('api/map/photos', [MapController::class, 'photos'])->name('api.map.ph
 Route::get('api/places/search', [PlaceController::class, 'search'])->name('api.places.search');
 Route::get('api/tags/search', [TagController::class, 'search'])->name('api.tags.search');
 
+Route::inertia('contribuir', 'Contribute')->name('contribute');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 
