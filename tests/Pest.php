@@ -13,6 +13,9 @@
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->beforeEach(function () {
+        Illuminate\Support\Facades\Storage::fake('s3');
+    })
     ->in('Feature');
 
 /*
