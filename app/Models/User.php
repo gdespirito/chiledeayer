@@ -48,6 +48,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the comments written by this user.
+     *
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the votes cast by this user.
+     *
+     * @return HasMany<Vote, $this>
+     */
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

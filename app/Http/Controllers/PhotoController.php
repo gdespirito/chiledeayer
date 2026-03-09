@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PhotoUploaded;
 use App\Http\Requests\StorePhotoRequest;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\PhotoResource;
+use App\Http\Resources\RevisionResource;
 use App\Jobs\ProcessPhotoUpload;
 use App\Models\Photo;
 use App\Models\Tag;
@@ -75,6 +78,8 @@ class PhotoController extends Controller
 
         ProcessPhotoUpload::dispatch($photo, $path);
 
+        PhotoUploaded::dispatch($photo->id, $request->user()->id);
+
         return to_route('photos.show', $photo)
             ->with('success', 'Foto subida correctamente. Las miniaturas se generarán en un momento.');
     }
@@ -84,8 +89,12 @@ class PhotoController extends Controller
      */
     public function show(Photo $photo): Response
     {
+        $photo->load(['files', 'user', 'place', 'tags', 'comments.user', 'revisions.user']);
+
         return Inertia::render('photos/Show', [
-            'photo' => new PhotoResource($photo->load(['files', 'user', 'place', 'tags'])),
+            'photo' => new PhotoResource($photo),
+            'comments' => CommentResource::collection($photo->comments->sortByDesc('created_at')),
+            'revisions' => RevisionResource::collection($photo->revisions->sortByDesc('created_at')),
         ]);
     }
 }

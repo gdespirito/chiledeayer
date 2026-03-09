@@ -1,0 +1,47 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Photo;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Vote>
+ */
+class VoteFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'photo_id' => Photo::factory(),
+            'user_id' => User::factory(),
+            'value' => fake()->randomElement([1, -1]),
+        ];
+    }
+
+    /**
+     * Indicate that the vote is an upvote.
+     */
+    public function upvote(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'value' => 1,
+        ]);
+    }
+
+    /**
+     * Indicate that the vote is a downvote.
+     */
+    public function downvote(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'value' => -1,
+        ]);
+    }
+}

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('year_from');
-            $table->smallInteger('year_to');
+            $table->smallInteger('year_to')->nullable();
             $table->enum('date_precision', ['exact', 'year', 'decade', 'circa'])->default('circa');
             $table->text('description')->nullable();
             $table->decimal('heading', 6, 2)->nullable();

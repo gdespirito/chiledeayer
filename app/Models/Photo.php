@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Photo extends Model
@@ -30,6 +31,8 @@ class Photo extends Model
         'user_id',
         'source_credit',
         'phash',
+        'upvotes_count',
+        'downvotes_count',
     ];
 
     /**
@@ -44,6 +47,8 @@ class Photo extends Model
             'year_to' => 'integer',
             'heading' => 'float',
             'pitch' => 'float',
+            'upvotes_count' => 'integer',
+            'downvotes_count' => 'integer',
         ];
     }
 
@@ -85,5 +90,69 @@ class Photo extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'photo_tag');
+    }
+
+    /**
+     * Get the comments for this photo.
+     *
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the votes for this photo.
+     *
+     * @return HasMany<Vote, $this>
+     */
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+    /**
+     * Get the revisions for this photo.
+     *
+     * @return MorphMany<Revision, $this>
+     */
+    public function revisions(): MorphMany
+    {
+        return $this->morphMany(Revision::class, 'revisionable');
+    }
+
+    /**
+     * Get the reports for this photo.
+     *
+     * @return HasMany<Report, $this>
+     */
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class);
+    }
+
+    /**
+     * Get the cached upvotes count.
+     */
+    public function upvotesCount(): int
+    {
+        return $this->upvotes_count;
+    }
+
+    /**
+     * Get the cached downvotes count.
+     */
+    public function downvotesCount(): int
+    {
+        return $this->downvotes_count;
+    }
+
+    /**
+     * Get the score (upvotes minus downvotes).
+     */
+    public function score(): int
+    {
+        return $this->upvotes_count - $this->downvotes_count;
     }
 }
