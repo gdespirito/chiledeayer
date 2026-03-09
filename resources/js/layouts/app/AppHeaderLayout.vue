@@ -19,5 +19,18 @@ withDefaults(defineProps<Props>(), {
         <AppContent>
             <slot />
         </AppContent>
+        <footer
+            class="border-t border-sidebar-border/80 py-6 text-center text-sm text-muted-foreground"
+        >
+            Hecho con ❤️ por
+            <a
+                href="https://freshwork.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="underline underline-offset-2 hover:text-foreground"
+            >
+                Freshwork
+            </a>
+        </footer>
     </AppShell>
 </template>
