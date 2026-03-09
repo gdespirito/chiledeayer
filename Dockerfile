@@ -20,7 +20,7 @@ FROM php:8.4-fpm-alpine AS app
 # Install system dependencies and PHP extensions
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN apk add --no-cache nginx supervisor sqlite curl && \
-    install-php-extensions pdo_mysql pdo_sqlite mbstring xml curl zip bcmath pcntl
+    install-php-extensions pdo_mysql pdo_sqlite mbstring xml curl zip bcmath pcntl gd
 
 WORKDIR /var/www/html
 
