@@ -112,6 +112,7 @@ composer run setup            # Install deps, generate key, migrate, build front
 - **Parallel agents**: Use agents to parallelize building whenever possible. Launch independent tasks (models, controllers, tests, frontend pages) as concurrent agents.
 - **Eloquent Resources**: Always use Eloquent API Resources (`php artisan make:resource`) to send data from controllers to Inertia frontend. Never pass raw models/arrays directly.
 - **Commit often**: Commit and push frequently after completing logical chunks of work.
+- **Test locally first**: Always test changes locally (tests + visual verification) before pushing. After pushing, check the deployment via `gh run list` and verify in production with kubectl/Playwright.
 
 ## Deployment
 

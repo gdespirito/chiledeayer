@@ -17,6 +17,8 @@ test('guests can view photo index', function () {
 });
 
 test('guests can view photo detail', function () {
+    Storage::fake('s3');
+
     $photo = Photo::factory()
         ->has(PhotoFile::factory(), 'files')
         ->create();
@@ -175,6 +177,8 @@ test('photo index shows latest photos first', function () {
 });
 
 test('photo show includes related data', function () {
+    Storage::fake('s3');
+
     $place = Place::factory()->create();
     $user = User::factory()->create();
     $tags = Tag::factory()->count(2)->create();
