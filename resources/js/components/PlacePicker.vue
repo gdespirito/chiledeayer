@@ -156,6 +156,12 @@ function initMap(lat: number, lng: number): void {
         map = null;
     }
 
+    // Force container to have explicit pixel width before Leaflet measures it
+    const containerWidth = mapContainer.value.parentElement?.offsetWidth;
+    if (containerWidth) {
+        mapContainer.value.style.width = `${containerWidth}px`;
+    }
+
     map = L.map(mapContainer.value).setView([lat, lng], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
@@ -169,8 +175,14 @@ function initMap(lat: number, lng: number): void {
         selectedGoogle.value.longitude = pos.lng;
     });
 
-    // Fix tiles not rendering when container size isn't settled yet
-    setTimeout(() => map?.invalidateSize(), 100);
+    // Reset to fluid width and re-measure after layout settles
+    setTimeout(() => {
+        if (mapContainer.value) {
+            mapContainer.value.style.width = '';
+        }
+        map?.invalidateSize();
+        map?.setView([lat, lng], 16);
+    }, 200);
 }
 
 function confirmLocation(): void {
