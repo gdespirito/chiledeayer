@@ -59,10 +59,42 @@ composer run setup            # Install deps, generate key, migrate, build front
 - Test structure mirrors app: `tests/Feature/Auth/`, `tests/Feature/Settings/`.
 - Uses in-memory SQLite for tests (configured in `phpunit.xml`).
 
+## Storage (Minio / S3)
+
+- **Development**: Minio on k8s cluster at `https://storage.freshwork.dev` (S3-compatible, path-style).
+- **Minio console**: `https://minio-console.freshwork.dev`.
+- **Bucket**: `chiledeayer`.
+- **Production**: Cloudflare R2 (S3-compatible, no egress fees).
+- `.env` uses `FILESYSTEM_DISK=s3` with `AWS_*` vars pointing to Minio (dev) or R2 (prod).
+- Flysystem S3 adapter: `league/flysystem-aws-s3-v3`.
+
+## Debugging (autonomous Claude capabilities)
+
+### Backend
+- **`last-error` (Boost MCP)**: Last backend exception with full stack trace.
+- **`read-log-entries` (Boost MCP)**: Read last N Laravel log entries.
+- **`tinker` (Boost MCP)**: Execute PHP in app context (debug queries, test logic).
+- **`database-query` / `database-schema` (Boost MCP)**: Inspect DB directly.
+- **`php artisan pail`**: Real-time log tailing (Laravel Pail).
+- **Tests**: `php artisan test --filter=X` to verify behavior.
+
+### Frontend
+- **Playwright MCP**: Navigate to pages, take screenshots, read accessibility tree, check console/network.
+- **`browser-logs` (Boost MCP)**: JS errors captured by Boost.
+- **`npm run types:check`**: TypeScript/Vue type verification.
+
+### Verification loop (after every change)
+1. `vendor/bin/pint --dirty --format agent` (if PHP changed)
+2. `npm run lint && npm run format` (if frontend changed)
+3. Run relevant tests
+4. Navigate to affected page with Playwright to verify visually
+5. Check `last-error` and `browser-logs` for new errors
+
 ## Deployment
 
+- **Live site**: `https://chiledeayer.freshwork.dev`.
+- **Auto-deploy**: Push to `main` triggers GitHub Actions → build & push to `registry.freshwork.dev/chiledeayer:latest` → deploy to k8s cluster via webhook.
 - **Docker**: 3-stage build (composer deps → frontend build → final alpine image with nginx+supervisor).
-- **CI/CD**: GitHub Actions on push to main → build & push to `registry.freshwork.dev/chiledeayer:latest` → deploy via webhook.
 - **K8s**: Manifest at `~/code/k8s-infra/clusters/lab/apps/chiledeayer.yaml`. Uses MariaDB operator CRs, SealedSecrets, Ingress with cert-manager TLS.
 - **kubectl context**: `admin@freshwork` (always use this context for k8s operations).
 
@@ -92,6 +124,12 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/sail (SAIL) - v1
 - pestphp/pest (PEST) - v4
 - phpunit/phpunit (PHPUNIT) - v12
+- @inertiajs/vue3 (INERTIA_VUE) - v2
+- tailwindcss (TAILWINDCSS) - v4
+- vue (VUE) - v3
+- @laravel/vite-plugin-wayfinder (WAYFINDER_VITE) - v0
+- eslint (ESLINT) - v9
+- prettier (PRETTIER) - v3
 
 ## Skills Activation
 
@@ -99,6 +137,8 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - `wayfinder-development` — Activates whenever referencing backend routes in frontend components. Use when importing from @/actions or @/routes, calling Laravel routes from TypeScript, or working with Wayfinder route functions.
 - `pest-testing` — Tests applications using the Pest 4 PHP framework. Activates when writing tests, creating unit or feature tests, adding assertions, testing Livewire components, browser testing, debugging test failures, working with datasets or mocking; or when the user mentions test, spec, TDD, expects, assertion, coverage, or needs to verify functionality works.
+- `inertia-vue-development` — Develops Inertia.js v2 Vue client-side applications. Activates when creating Vue pages, forms, or navigation; using &lt;Link&gt;, &lt;Form&gt;, useForm, or router; working with deferred props, prefetching, or polling; or when user mentions Vue with Inertia, Vue pages, Vue forms, or Vue navigation.
+- `tailwindcss-development` — Styles applications using Tailwind CSS v4 utilities. Activates when adding styles, restyling components, working with gradients, spacing, layout, flex, grid, responsive design, dark mode, colors, typography, or borders; or when the user mentions CSS, styling, classes, Tailwind, restyle, hero section, cards, buttons, or any visual/UI changes.
 - `developing-with-fortify` — Laravel Fortify headless authentication backend development. Activate when implementing authentication features including login, registration, password reset, email verification, two-factor authentication (2FA/TOTP), profile updates, headless auth, authentication scaffolding, or auth guards in Laravel applications.
 
 ## Conventions
@@ -226,6 +266,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Inertia creates fully client-side rendered SPAs without modern SPA complexity, leveraging existing server-side patterns.
 - Components live in `resources/js/pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
 - ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
+- IMPORTANT: Activate `inertia-vue-development` when working with Inertia Vue client-side patterns.
 
 # Inertia v2
 
@@ -341,6 +382,21 @@ Wayfinder generates TypeScript functions for Laravel routes. Import from `@/acti
 - Do NOT delete tests without approval.
 - CRITICAL: ALWAYS use `search-docs` tool for version-specific Pest documentation and updated code examples.
 - IMPORTANT: Activate `pest-testing` every time you're working with a Pest or testing-related task.
+
+=== inertia-vue/core rules ===
+
+# Inertia + Vue
+
+Vue components must have a single root element.
+- IMPORTANT: Activate `inertia-vue-development` when working with Inertia Vue client-side patterns.
+
+=== tailwindcss/core rules ===
+
+# Tailwind CSS
+
+- Always use existing Tailwind conventions; check project patterns before adding new ones.
+- IMPORTANT: Always use `search-docs` tool for version-specific Tailwind CSS documentation and updated code examples. Never rely on training data.
+- IMPORTANT: Activate `tailwindcss-development` every time you're working with a Tailwind CSS or styling-related task.
 
 === laravel/fortify rules ===
 
