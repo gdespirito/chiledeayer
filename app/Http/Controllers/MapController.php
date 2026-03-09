@@ -65,7 +65,7 @@ class MapController extends Controller
                     'id' => $photo->id,
                     'lat' => $photo->place->latitude,
                     'lng' => $photo->place->longitude,
-                    'description' => $photo->description,
+                    'title' => $photo->title,
                     'year_from' => $photo->year_from,
                     'thumb_url' => $thumb?->url(),
                 ];

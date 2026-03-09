@@ -30,7 +30,7 @@ test('guests can view photo detail', function () {
         ->component('photos/Show')
         ->has('photo.data', fn ($page) => $page
             ->where('id', $photo->id)
-            ->where('description', $photo->description)
+            ->where('title', $photo->title)
             ->etc()
         )
     );
@@ -66,7 +66,7 @@ test('authenticated users can upload a photo', function () {
 
     $response = $this->actingAs($user)->post(route('photos.store'), [
         'photo' => UploadedFile::fake()->image('photo.jpg', 1200, 800),
-        'description' => 'Una foto historica de Santiago',
+        'title' => 'Una foto historica de Santiago',
         'year_from' => 1920,
         'year_to' => 1925,
         'date_precision' => 'circa',
@@ -78,7 +78,7 @@ test('authenticated users can upload a photo', function () {
     $photo = Photo::first();
 
     expect($photo)->not->toBeNull();
-    expect($photo->description)->toBe('Una foto historica de Santiago');
+    expect($photo->title)->toBe('Una foto historica de Santiago');
     expect($photo->year_from)->toBe(1920);
     expect($photo->year_to)->toBe(1925);
     expect($photo->date_precision)->toBe('circa');
@@ -101,7 +101,7 @@ test('photo upload validates required fields', function () {
 
     $response = $this->actingAs($user)->post(route('photos.store'), []);
 
-    $response->assertSessionHasErrors(['photo', 'description', 'year_from', 'date_precision']);
+    $response->assertSessionHasErrors(['photo', 'title', 'year_from', 'date_precision']);
 });
 
 test('photo upload validates year range', function () {
@@ -110,7 +110,7 @@ test('photo upload validates year range', function () {
 
     $response = $this->actingAs($user)->post(route('photos.store'), [
         'photo' => UploadedFile::fake()->image('photo.jpg', 1200, 800),
-        'description' => 'Test photo',
+        'title' => 'Test photo',
         'year_from' => 1950,
         'year_to' => 1940,
         'date_precision' => 'year',
@@ -124,7 +124,7 @@ test('photo upload validates image file', function () {
 
     $response = $this->actingAs($user)->post(route('photos.store'), [
         'photo' => UploadedFile::fake()->create('document.pdf', 500, 'application/pdf'),
-        'description' => 'Test photo',
+        'title' => 'Test photo',
         'year_from' => 1950,
         'date_precision' => 'year',
     ]);
@@ -140,7 +140,7 @@ test('tags are created and attached on upload', function () {
 
     $this->actingAs($user)->post(route('photos.store'), [
         'photo' => UploadedFile::fake()->image('photo.jpg', 1200, 800),
-        'description' => 'Foto con tags',
+        'title' => 'Foto con tags',
         'year_from' => 1900,
         'date_precision' => 'decade',
         'tags' => ['Plaza de Armas', 'Centro Historico'],
@@ -158,9 +158,9 @@ test('photo index shows latest photos first', function () {
     $photos = Photo::factory()
         ->count(3)
         ->sequence(
-            ['created_at' => now()->subDays(2), 'description' => 'Oldest'],
-            ['created_at' => now()->subDay(), 'description' => 'Middle'],
-            ['created_at' => now(), 'description' => 'Newest'],
+            ['created_at' => now()->subDays(2), 'title' => 'Oldest'],
+            ['created_at' => now()->subDay(), 'title' => 'Middle'],
+            ['created_at' => now(), 'title' => 'Newest'],
         )
         ->create();
 
@@ -170,9 +170,9 @@ test('photo index shows latest photos first', function () {
     $response->assertInertia(fn ($page) => $page
         ->component('photos/Index')
         ->has('photos.data', 3)
-        ->where('photos.data.0.description', 'Newest')
-        ->where('photos.data.1.description', 'Middle')
-        ->where('photos.data.2.description', 'Oldest')
+        ->where('photos.data.0.title', 'Newest')
+        ->where('photos.data.1.title', 'Middle')
+        ->where('photos.data.2.title', 'Oldest')
     );
 });
 

@@ -19,7 +19,7 @@ class PhotoMetadataController extends Controller
         $validated = $request->validated();
 
         $metadataFields = [
-            'description',
+            'title',
             'year_from',
             'year_to',
             'date_precision',

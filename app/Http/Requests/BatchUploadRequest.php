@@ -26,7 +26,7 @@ class BatchUploadRequest extends FormRequest
         return [
             'photos' => ['required', 'array', 'min:1', 'max:50'],
             'photos.*' => ['required', File::image()->max(20 * 1024)],
-            'shared_description' => ['nullable', 'string', 'max:2000'],
+            'shared_title' => ['nullable', 'string', 'max:255'],
             'shared_year_from' => ['required', 'integer', 'min:1800', 'max:'.date('Y')],
             'shared_year_to' => ['nullable', 'integer', 'min:1800', 'max:'.date('Y'), 'gte:shared_year_from'],
             'shared_date_precision' => ['required', 'string', 'in:exact,year,decade,circa'],
@@ -35,7 +35,7 @@ class BatchUploadRequest extends FormRequest
             'shared_tags' => ['nullable', 'array'],
             'shared_tags.*' => ['string', 'max:100'],
             'overrides' => ['nullable', 'array'],
-            'overrides.*.description' => ['nullable', 'string', 'max:2000'],
+            'overrides.*.title' => ['nullable', 'string', 'max:255'],
             'overrides.*.year_from' => ['nullable', 'integer', 'min:1800', 'max:'.date('Y')],
             'overrides.*.year_to' => ['nullable', 'integer', 'min:1800', 'max:'.date('Y')],
             'overrides.*.place_id' => ['nullable', 'exists:places,id'],

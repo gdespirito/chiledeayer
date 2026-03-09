@@ -14,7 +14,7 @@ test('public api returns paginated photos', function () {
 
     $response->assertOk();
     $response->assertJsonStructure([
-        'data' => [['id', 'description', 'year_from']],
+        'data' => [['id', 'title', 'year_from']],
         'links',
         'meta',
     ]);
@@ -30,7 +30,7 @@ test('public api returns single photo', function () {
 
     $response->assertOk();
     $response->assertJsonPath('data.id', $photo->id);
-    $response->assertJsonPath('data.description', $photo->description);
+    $response->assertJsonPath('data.title', $photo->title);
 });
 
 test('public api returns paginated places', function () {
@@ -60,21 +60,21 @@ test('authenticated api can upload photo with sanctum token', function () {
 
     $response = $this->withToken($token->plainTextToken)->postJson('/api/v1/photos', [
         'photo' => UploadedFile::fake()->image('photo.jpg', 1200, 800),
-        'description' => 'Test API upload',
+        'title' => 'Test API upload',
         'year_from' => 1920,
         'date_precision' => 'year',
         'place_id' => $place->id,
     ]);
 
     $response->assertCreated();
-    $response->assertJsonPath('data.description', 'Test API upload');
+    $response->assertJsonPath('data.title', 'Test API upload');
 
     expect(Photo::count())->toBe(1);
 });
 
 test('unauthenticated api cannot upload photo', function () {
     $response = $this->postJson('/api/v1/photos', [
-        'description' => 'Test',
+        'title' => 'Test',
         'year_from' => 1920,
         'date_precision' => 'year',
     ]);

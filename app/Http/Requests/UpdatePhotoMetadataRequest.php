@@ -23,7 +23,7 @@ class UpdatePhotoMetadataRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => ['nullable', 'string', 'max:2000'],
+            'title' => ['nullable', 'string', 'max:255'],
             'year_from' => ['nullable', 'integer', 'min:1800', 'max:'.date('Y')],
             'year_to' => ['nullable', 'integer', 'min:1800', 'max:'.date('Y'), 'gte:year_from'],
             'date_precision' => ['nullable', 'string', 'in:exact,year,decade,circa'],

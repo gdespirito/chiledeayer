@@ -55,7 +55,7 @@ class PhotoController extends Controller
         );
 
         $photo = $request->user()->photos()->create([
-            'description' => $validated['description'],
+            'title' => $validated['title'],
             'year_from' => $validated['year_from'],
             'year_to' => $validated['year_to'] ?? null,
             'date_precision' => $validated['date_precision'],

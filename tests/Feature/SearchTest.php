@@ -15,11 +15,11 @@ test('search page renders successfully', function () {
 test('search page returns matching photos', function () {
     Photo::factory()
         ->has(PhotoFile::factory(), 'files')
-        ->create(['description' => 'Plaza de Armas de Santiago']);
+        ->create(['title' => 'Plaza de Armas de Santiago']);
 
     Photo::factory()
         ->has(PhotoFile::factory(), 'files')
-        ->create(['description' => 'Playa de Vina del Mar']);
+        ->create(['title' => 'Playa de Vina del Mar']);
 
     $response = $this->get(route('search', ['q' => 'Santiago']));
 

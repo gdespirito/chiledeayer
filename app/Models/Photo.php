@@ -22,7 +22,7 @@ class Photo extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'description',
+        'title',
         'year_from',
         'year_to',
         'date_precision',
@@ -190,7 +190,7 @@ class Photo extends Model
     {
         return [
             'id' => $this->id,
-            'description' => $this->description,
+            'title' => $this->title,
             'year_from' => $this->year_from,
             'year_to' => $this->year_to,
             'place_name' => $this->place?->name,

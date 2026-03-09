@@ -25,12 +25,12 @@ test('map photos endpoint returns photos within bounds', function () {
     Photo::factory()
         ->for($placeInside)
         ->has(PhotoFile::factory()->thumb(), 'files')
-        ->create(['description' => 'Santiago antiguo']);
+        ->create(['title' => 'Santiago antiguo']);
 
     Photo::factory()
         ->for($placeOutside)
         ->has(PhotoFile::factory()->thumb(), 'files')
-        ->create(['description' => 'Madrid foto']);
+        ->create(['title' => 'Madrid foto']);
 
     $response = $this->getJson(route('api.map.photos', [
         'north' => -30.0,
@@ -41,8 +41,8 @@ test('map photos endpoint returns photos within bounds', function () {
 
     $response->assertOk();
     $response->assertJsonCount(1);
-    $response->assertJsonFragment(['description' => 'Santiago antiguo']);
-    $response->assertJsonMissing(['description' => 'Madrid foto']);
+    $response->assertJsonFragment(['title' => 'Santiago antiguo']);
+    $response->assertJsonMissing(['title' => 'Madrid foto']);
 });
 
 test('map photos endpoint filters by year range', function () {
@@ -110,11 +110,11 @@ test('map photos endpoint excludes photos without a place', function () {
 
     Photo::factory()
         ->for($placeInBounds)
-        ->create(['description' => 'Geolocated photo']);
+        ->create(['title' => 'Geolocated photo']);
 
     Photo::factory()
         ->withoutPlace()
-        ->create(['description' => 'No place photo']);
+        ->create(['title' => 'No place photo']);
 
     $response = $this->getJson(route('api.map.photos', [
         'north' => -30.0,
@@ -125,5 +125,5 @@ test('map photos endpoint excludes photos without a place', function () {
 
     $response->assertOk();
     $response->assertJsonCount(1);
-    $response->assertJsonFragment(['description' => 'Geolocated photo']);
+    $response->assertJsonFragment(['title' => 'Geolocated photo']);
 });

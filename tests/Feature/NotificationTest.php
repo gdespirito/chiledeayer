@@ -34,7 +34,7 @@ test('photo owner receives notification when someone edits metadata', function (
     $editor = User::factory()->create();
     $photo = Photo::factory()->for($owner)->create();
 
-    MetadataEdited::dispatch($photo->id, $editor->id, ['description' => 'updated']);
+    MetadataEdited::dispatch($photo->id, $editor->id, ['title' => 'updated']);
 
     Notification::assertSentTo($owner, PhotoEditedNotification::class, function ($notification) use ($photo, $editor) {
         return $notification->photoId === $photo->id

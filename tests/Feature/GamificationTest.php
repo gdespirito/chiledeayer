@@ -36,7 +36,7 @@ test('editing metadata awards points', function () {
     $user = User::factory()->create();
     $photo = Photo::factory()->for($user)->create();
 
-    MetadataEdited::dispatch($photo->id, $user->id, ['description' => 'updated']);
+    MetadataEdited::dispatch($photo->id, $user->id, ['title' => 'updated']);
 
     $user->refresh();
 
@@ -185,7 +185,7 @@ test('first edit badge is awarded on first metadata edit', function () {
     $user = User::factory()->create();
     $photo = Photo::factory()->create();
 
-    MetadataEdited::dispatch($photo->id, $user->id, ['description' => 'updated']);
+    MetadataEdited::dispatch($photo->id, $user->id, ['title' => 'updated']);
 
     $user->refresh();
 

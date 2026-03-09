@@ -10,7 +10,7 @@ type MapPhoto = {
     id: number;
     lat: number;
     lng: number;
-    description: string;
+    title: string;
     year_from: number;
     thumb_url: string | null;
 };
@@ -68,9 +68,9 @@ async function fetchPhotos(): Promise<void> {
 
         for (const photo of photos) {
             const desc =
-                photo.description.length > 80
-                    ? photo.description.substring(0, 80) + '...'
-                    : photo.description;
+                photo.title.length > 80
+                    ? photo.title.substring(0, 80) + '...'
+                    : photo.title;
 
             const thumbHtml = photo.thumb_url
                 ? `<img src="${photo.thumb_url}" alt="" class="mb-2 h-24 w-full rounded object-cover" />`

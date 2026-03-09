@@ -241,7 +241,7 @@ const exploreLinks = [
                             <img
                                 v-if="getThumbnail(props.photoOfTheDay.data)"
                                 :src="getThumbnail(props.photoOfTheDay.data)!"
-                                :alt="props.photoOfTheDay.data.description"
+                                :alt="props.photoOfTheDay.data.title"
                                 class="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                         </div>
@@ -251,7 +251,7 @@ const exploreLinks = [
                             <p
                                 class="text-lg leading-relaxed font-medium lg:text-xl"
                             >
-                                {{ props.photoOfTheDay.data.description }}
+                                {{ props.photoOfTheDay.data.title }}
                             </p>
                             <div
                                 class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground"
@@ -398,13 +398,13 @@ const exploreLinks = [
                                 <img
                                     v-if="getThumbnail(photo)"
                                     :src="getThumbnail(photo)!"
-                                    :alt="photo.description"
+                                    :alt="photo.title"
                                     class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                                 />
                             </div>
                             <div class="space-y-2 p-4">
                                 <p class="line-clamp-2 text-sm font-medium">
-                                    {{ photo.description }}
+                                    {{ photo.title }}
                                 </p>
                                 <div class="flex flex-wrap gap-1.5">
                                     <span

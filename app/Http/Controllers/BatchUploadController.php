@@ -52,7 +52,7 @@ class BatchUploadController extends Controller
             );
 
             $photo = $request->user()->photos()->create([
-                'description' => $override['description'] ?? $validated['shared_description'] ?? null,
+                'title' => $override['title'] ?? $validated['shared_title'] ?? null,
                 'year_from' => $override['year_from'] ?? $validated['shared_year_from'],
                 'year_to' => $override['year_to'] ?? $validated['shared_year_to'] ?? null,
                 'date_precision' => $validated['shared_date_precision'],

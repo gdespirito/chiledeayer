@@ -21,7 +21,7 @@ class PhotoFactory extends Factory
         $yearFrom = fake()->numberBetween(1850, 1990);
 
         return [
-            'description' => fake()->paragraph(),
+            'title' => fake()->sentence(),
             'year_from' => $yearFrom,
             'year_to' => $yearFrom + fake()->numberBetween(0, 10),
             'date_precision' => fake()->randomElement(['exact', 'year', 'decade', 'circa']),

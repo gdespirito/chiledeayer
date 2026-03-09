@@ -37,7 +37,7 @@ class DuplicateCheckController extends Controller
             ->filter(fn (Photo $photo) => $this->hammingDistance($phash, $photo->phash) < 10)
             ->map(fn (Photo $photo) => [
                 'id' => $photo->id,
-                'description' => $photo->description,
+                'title' => $photo->title,
                 'thumbnail' => $photo->files->first()?->url(),
                 'distance' => $this->hammingDistance($phash, $photo->phash),
             ])

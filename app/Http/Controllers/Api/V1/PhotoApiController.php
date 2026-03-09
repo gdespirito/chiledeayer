@@ -44,7 +44,7 @@ class PhotoApiController extends Controller
         );
 
         $photo = $request->user()->photos()->create([
-            'description' => $validated['description'],
+            'title' => $validated['title'],
             'year_from' => $validated['year_from'],
             'year_to' => $validated['year_to'] ?? null,
             'date_precision' => $validated['date_precision'],
@@ -74,7 +74,7 @@ class PhotoApiController extends Controller
     public function updateMetadata(Request $request, Photo $photo): PhotoResource
     {
         $validated = $request->validate([
-            'description' => ['sometimes', 'string', 'max:2000'],
+            'title' => ['sometimes', 'string', 'max:2000'],
             'year_from' => ['sometimes', 'integer', 'min:1800', 'max:'.date('Y')],
             'year_to' => ['nullable', 'integer', 'min:1800', 'max:'.date('Y'), 'gte:year_from'],
             'date_precision' => ['sometimes', 'string', 'in:exact,year,decade,circa'],
@@ -86,7 +86,7 @@ class PhotoApiController extends Controller
             'tags.*' => ['string', 'max:100'],
         ]);
 
-        $metadataFields = ['description', 'year_from', 'year_to', 'date_precision', 'place_id', 'source_credit', 'heading', 'pitch'];
+        $metadataFields = ['title', 'year_from', 'year_to', 'date_precision', 'place_id', 'source_credit', 'heading', 'pitch'];
 
         $changes = collect($metadataFields)
             ->filter(fn (string $field) => array_key_exists($field, $validated))
