@@ -92,8 +92,13 @@
 ### Branding & UX
 - Replaced all "Laravel Starter Kit" references with "Archivo de Chile"
 - Added OG meta tags (og:site_name, og:locale, og:image on photo pages)
-- Improved Home page with hero section and navigation
-- Improved Dashboard with welcome message and quick actions
+- Improved Home page: hero section, photo of the day (two-column layout with metadata), curated sections
+- Interactive vote buttons (upvote/downvote + score) on PhotoCard previews across all pages
+- "Necesitan tu ayuda" section shows colored help-needed badges (ubicación, etiquetas, comentarios)
+- Places index page: adaptive photo collage (1-4 photos per place card)
+- Contribute page: full landing page with hero, step-by-step flow, feature sections, gamification breakdown, CTAs
+- Google Analytics (gtag.js G-TN91RNDX31) integrated
+- Footer: "Hecho con ❤️ por Freshwork"
 - Fixed sidebar navigation: Inicio, Fotos, Lugares, Mapa, Tabla de Honor
 
 ---
@@ -118,6 +123,6 @@ Using database queue driver instead of Redis for simplicity (one less service to
 ---
 
 ## Test Suite Summary
-- **Total**: 159 tests, 804 assertions
-- **Duration**: ~4 seconds
+- **Total**: 167 tests, 825 assertions
+- **Duration**: ~3 seconds
 - **CI**: All tests pass on GitHub Actions (SQLite in-memory with global Storage::fake('s3'))
