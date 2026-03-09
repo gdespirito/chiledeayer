@@ -23,7 +23,7 @@ it('stores a contact message and sends emails', function () {
         'phone' => '+56 9 1234 5678',
         'subject' => 'Consulta',
         'body' => 'Hola, quiero saber más sobre el proyecto.',
-    ])->assertRedirect();
+    ])->assertRedirect('/contacto-success');
 
     expect(ContactMessage::count())->toBe(1);
 
@@ -36,6 +36,18 @@ it('stores a contact message and sends emails', function () {
     Mail::assertQueued(ContactMessageReceived::class, fn ($mail) => $mail->hasTo($admin->email));
 
     Mail::assertQueued(ContactMessageConfirmation::class, fn ($mail) => $mail->hasTo('juan@example.com'));
+});
+
+it('redirects to success page after submission', function () {
+    Mail::fake();
+    User::factory()->create(['is_admin' => true]);
+
+    $this->post('/contacto', [
+        'name' => 'Test',
+        'email' => 'test@example.com',
+        'subject' => 'Test',
+        'body' => 'Test message',
+    ])->assertRedirect('/contacto-success');
 });
 
 it('validates required fields', function () {

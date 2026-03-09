@@ -51,6 +51,7 @@ Route::inertia('contribuir', 'Contribute')->name('contribute');
 
 Route::get('contacto', [ContactController::class, 'create'])->name('contact.create');
 Route::post('contacto', [ContactController::class, 'store'])->name('contact.store');
+Route::get('contacto-success', [ContactController::class, 'success'])->name('contact.success');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');

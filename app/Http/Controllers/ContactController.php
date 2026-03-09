@@ -31,6 +31,11 @@ class ContactController extends Controller
 
         Mail::to($message->email)->queue(new ContactMessageConfirmation($message));
 
-        return back()->with('success', '¡Mensaje enviado! Te responderemos lo antes posible.');
+        return redirect()->route('contact.success');
+    }
+
+    public function success(): Response
+    {
+        return Inertia::render('ContactSuccess');
     }
 }
