@@ -3,16 +3,19 @@ import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import {
     Calendar,
     Camera,
+    Check,
     ImagePlus,
+    Link2,
     MapPin,
     MessageCircle,
+    Share2,
     Tag as TagIcon,
     ThumbsDown,
     ThumbsUp,
     Trash2,
     User,
 } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -240,6 +243,46 @@ function formatRelativeDate(dateString: string): string {
     return 'hace un momento';
 }
 
+// Sharing
+const canShare = ref(false);
+const linkCopied = ref(false);
+
+onMounted(() => {
+    canShare.value = typeof navigator.share === 'function';
+});
+
+async function sharePhoto(): Promise<void> {
+    const url = window.location.href;
+
+    if (canShare.value) {
+        try {
+            await navigator.share({
+                title: ogTitle.value,
+                text: ogDescription.value,
+                url,
+            });
+        } catch {
+            // User cancelled — ignore
+        }
+
+        return;
+    }
+
+    await copyLink();
+}
+
+async function copyLink(): Promise<void> {
+    try {
+        await navigator.clipboard.writeText(window.location.href);
+        linkCopied.value = true;
+        setTimeout(() => {
+            linkCopied.value = false;
+        }, 2000);
+    } catch {
+        // Fallback
+    }
+}
+
 // Get user initials for avatar
 function getUserInitials(name: string): string {
     return name
@@ -253,10 +296,21 @@ function getUserInitials(name: string): string {
 
 <template>
     <Head :title="ogTitle">
+        <meta
+            head-key="description"
+            name="description"
+            :content="ogDescription"
+        />
         <meta property="og:title" :content="ogTitle" />
         <meta property="og:description" :content="ogDescription" />
         <meta v-if="ogImage" property="og:image" :content="ogImage" />
+        <meta v-if="ogImage" property="og:image:width" content="800" />
+        <meta v-if="ogImage" property="og:image:height" content="600" />
         <meta property="og:type" content="article" />
+        <meta
+            name="twitter:card"
+            :content="ogImage ? 'summary_large_image' : 'summary'"
+        />
     </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -347,6 +401,35 @@ function getUserInitials(name: string): string {
                                 Inicia sesión para votar
                             </Link>
                         </template>
+                    </div>
+
+                    <!-- Share -->
+                    <div class="flex gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            class="flex-1"
+                            @click="sharePhoto"
+                        >
+                            <Share2 class="mr-1.5 size-4" />
+                            Compartir
+                        </Button>
+                        <Button
+                            v-if="canShare"
+                            variant="ghost"
+                            size="sm"
+                            @click="copyLink"
+                        >
+                            <component
+                                :is="linkCopied ? Check : Link2"
+                                class="size-4"
+                                :class="
+                                    linkCopied
+                                        ? 'text-green-600 dark:text-green-400'
+                                        : ''
+                                "
+                            />
+                        </Button>
                     </div>
 
                     <!-- Date -->

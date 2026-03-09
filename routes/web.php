@@ -18,10 +18,13 @@ use App\Http\Controllers\PhotoMetadataController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('search', [SearchController::class, 'index'])->name('search');

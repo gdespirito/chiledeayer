@@ -20,7 +20,9 @@ defineProps<{
         title="Olvidé mi contraseña"
         description="Ingresa tu correo para recibir un enlace de restablecimiento"
     >
-        <Head title="Olvidé mi contraseña" />
+        <Head title="Olvidé mi contraseña">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <div
             v-if="status"

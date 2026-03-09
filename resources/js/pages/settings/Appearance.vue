@@ -17,7 +17,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Configuración de apariencia" />
+        <Head title="Configuración de apariencia">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <h1 class="sr-only">Configuración de apariencia</h1>
 

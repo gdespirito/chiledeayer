@@ -51,7 +51,18 @@ function formatDateRange(photo: Photo): string {
 </script>
 
 <template>
-    <Head title="Fotos" />
+    <Head title="Fotos">
+        <meta
+            head-key="description"
+            name="description"
+            content="Explora la colección de fotografías históricas de Chile. Imágenes de archivo que capturan la historia y cultura chilena."
+        />
+        <meta property="og:title" content="Fotos — Archivo de Chile" />
+        <meta
+            property="og:description"
+            content="Explora la colección de fotografías históricas de Chile."
+        />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

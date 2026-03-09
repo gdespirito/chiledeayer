@@ -21,7 +21,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Configuración de contraseña" />
+        <Head title="Configuración de contraseña">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <h1 class="sr-only">Configuración de contraseña</h1>
 

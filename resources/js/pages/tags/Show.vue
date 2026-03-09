@@ -50,7 +50,21 @@ function formatDateRange(photo: Photo): string {
 </script>
 
 <template>
-    <Head :title="props.tag.data.name" />
+    <Head :title="props.tag.data.name">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Fotografías históricas etiquetadas con ${props.tag.data.name}. Archivo fotográfico de Chile.`"
+        />
+        <meta
+            property="og:title"
+            :content="`${props.tag.data.name} — Archivo de Chile`"
+        />
+        <meta
+            property="og:description"
+            :content="`Fotografías históricas etiquetadas con ${props.tag.data.name}.`"
+        />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

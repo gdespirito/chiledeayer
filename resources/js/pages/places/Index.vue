@@ -20,7 +20,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 </script>
 
 <template>
-    <Head title="Lugares" />
+    <Head title="Lugares">
+        <meta
+            head-key="description"
+            name="description"
+            content="Descubre lugares históricos de Chile a través de fotografías de archivo. Ciudades, pueblos y rincones del patrimonio chileno."
+        />
+        <meta property="og:title" content="Lugares — Archivo de Chile" />
+        <meta
+            property="og:description"
+            content="Descubre lugares históricos de Chile a través de fotografías de archivo."
+        />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

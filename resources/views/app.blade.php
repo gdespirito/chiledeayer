@@ -32,9 +32,16 @@
 
         <title inertia>{{ config('app.name', 'Archivo de Chile') }}</title>
 
+        <meta name="description" inertia content="Explora fotografías históricas de Chile. Un archivo colaborativo del patrimonio visual chileno.">
         <meta property="og:site_name" content="Archivo de Chile">
         <meta property="og:locale" content="es_CL">
-        <meta name="description" content="Explora fotografias historicas de Chile. Un archivo colaborativo del patrimonio visual chileno.">
+        <meta property="og:type" inertia content="website">
+        <meta property="og:image" inertia content="{{ asset('og-image.png') }}">
+        <meta property="og:image:width" inertia content="1200">
+        <meta property="og:image:height" inertia content="630">
+        <meta name="twitter:card" inertia content="summary_large_image">
+        <meta name="twitter:site" content="@archivochile">
+        <link rel="canonical" inertia href="{{ url()->current() }}">
 
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">

@@ -20,7 +20,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 </script>
 
 <template>
-    <Head title="Ranking" />
+    <Head title="Ranking">
+        <meta
+            head-key="description"
+            name="description"
+            content="Tabla de honor de los mayores contribuyentes del Archivo de Chile. Ranking por puntos e insignias."
+        />
+        <meta property="og:title" content="Ranking — Archivo de Chile" />
+        <meta
+            property="og:description"
+            content="Tabla de honor de los mayores contribuyentes del Archivo de Chile."
+        />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

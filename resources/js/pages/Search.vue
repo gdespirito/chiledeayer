@@ -81,7 +81,14 @@ function clearAllFilters(): void {
 </script>
 
 <template>
-    <Head title="Buscar" />
+    <Head title="Buscar">
+        <meta
+            head-key="description"
+            name="description"
+            content="Busca fotografías históricas de Chile por lugar, época, etiquetas y más."
+        />
+        <meta name="robots" content="noindex, follow" />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

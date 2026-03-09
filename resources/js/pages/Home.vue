@@ -82,7 +82,22 @@ const exploreLinks = [
 </script>
 
 <template>
-    <Head title="Inicio" />
+    <Head title="Inicio">
+        <meta
+            head-key="description"
+            name="description"
+            content="Explora fotografías históricas de Chile. Un archivo colaborativo del patrimonio visual chileno donde puedes descubrir, compartir y preservar nuestra memoria visual."
+        />
+        <meta
+            property="og:title"
+            content="Archivo de Chile — Fotografías históricas"
+        />
+        <meta
+            property="og:description"
+            content="Descubre la historia visual de Chile a través de fotografías históricas. Explora, contribuye y ayuda a preservar nuestra memoria visual."
+        />
+        <meta property="og:type" content="website" />
+    </Head>
 
     <AppLayout>
         <div class="flex flex-1 flex-col">

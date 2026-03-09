@@ -34,7 +34,9 @@ const user = computed(() => page.props.auth.user);
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Configuración de perfil" />
+        <Head title="Configuración de perfil">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <h1 class="sr-only">Configuración de perfil</h1>
 

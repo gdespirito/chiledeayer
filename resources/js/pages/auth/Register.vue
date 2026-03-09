@@ -16,7 +16,9 @@ import { store } from '@/routes/register';
         title="Crea una cuenta"
         description="Ingresa tus datos para crear tu cuenta"
     >
-        <Head title="Registro" />
+        <Head title="Registro">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <Form
             v-bind="store.form()"

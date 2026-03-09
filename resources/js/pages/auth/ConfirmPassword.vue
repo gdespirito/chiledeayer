@@ -14,7 +14,9 @@ import { store } from '@/routes/password/confirm';
         title="Confirma tu contraseña"
         description="Esta es un área segura. Por favor confirma tu contraseña antes de continuar."
     >
-        <Head title="Confirmar contraseña" />
+        <Head title="Confirmar contraseña">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <Form
             v-bind="store.form()"

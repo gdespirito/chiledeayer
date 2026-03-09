@@ -17,7 +17,9 @@ defineProps<{
         title="Verificar correo"
         description="Verifica tu correo haciendo clic en el enlace que te enviamos."
     >
-        <Head title="Verificación de correo" />
+        <Head title="Verificación de correo">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <div
             v-if="status === 'verification-link-sent'"

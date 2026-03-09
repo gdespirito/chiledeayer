@@ -48,7 +48,9 @@ const quickLinks = [
 </script>
 
 <template>
-    <Head title="Panel" />
+    <Head title="Panel">
+        <meta name="robots" content="noindex, nofollow" />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4 lg:p-6">

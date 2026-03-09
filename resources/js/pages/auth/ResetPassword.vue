@@ -22,7 +22,9 @@ const inputEmail = ref(props.email);
         title="Restablecer contraseña"
         description="Ingresa tu nueva contraseña"
     >
-        <Head title="Restablecer contraseña" />
+        <Head title="Restablecer contraseña">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <Form
             v-bind="update.form()"

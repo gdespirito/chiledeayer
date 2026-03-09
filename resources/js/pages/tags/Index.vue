@@ -20,7 +20,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 </script>
 
 <template>
-    <Head title="Etiquetas" />
+    <Head title="Etiquetas">
+        <meta
+            head-key="description"
+            name="description"
+            content="Explora las etiquetas del archivo fotográfico de Chile. Temas, épocas y categorías de fotografías históricas."
+        />
+        <meta property="og:title" content="Etiquetas — Archivo de Chile" />
+        <meta
+            property="og:description"
+            content="Explora las etiquetas del archivo fotográfico de Chile."
+        />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

@@ -19,7 +19,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 </script>
 
 <template>
-    <Head title="Personas" />
+    <Head title="Personas">
+        <meta
+            head-key="description"
+            name="description"
+            content="Personas identificadas en fotografías históricas de Chile. Figuras históricas y ciudadanos del patrimonio visual chileno."
+        />
+        <meta property="og:title" content="Personas — Archivo de Chile" />
+        <meta
+            property="og:description"
+            content="Personas identificadas en fotografías históricas de Chile."
+        />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

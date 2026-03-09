@@ -77,7 +77,21 @@ function formatMemberSince(dateString: string): string {
 </script>
 
 <template>
-    <Head :title="props.user.data.name" />
+    <Head :title="props.user.data.name">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Perfil de ${props.user.data.name} en el Archivo de Chile. ${props.user.data.photos_count} fotos contribuidas.`"
+        />
+        <meta
+            property="og:title"
+            :content="`${props.user.data.name} — Archivo de Chile`"
+        />
+        <meta
+            property="og:description"
+            :content="`Perfil de ${props.user.data.name}. ${props.user.data.photos_count} fotos contribuidas.`"
+        />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-6 p-4">

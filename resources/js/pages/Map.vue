@@ -137,7 +137,18 @@ watch([yearFrom, yearTo], () => {
 </script>
 
 <template>
-    <Head title="Mapa" />
+    <Head title="Mapa">
+        <meta
+            head-key="description"
+            name="description"
+            content="Mapa interactivo de fotografías históricas de Chile. Explora fotos por ubicación geográfica y rango temporal."
+        />
+        <meta property="og:title" content="Mapa — Archivo de Chile" />
+        <meta
+            property="og:description"
+            content="Mapa interactivo de fotografías históricas de Chile."
+        />
+    </Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="relative flex flex-1 flex-col">

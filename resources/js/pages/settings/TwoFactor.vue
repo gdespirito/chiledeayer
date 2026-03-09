@@ -40,7 +40,9 @@ onUnmounted(() => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Autenticación de dos factores" />
+        <Head title="Autenticación de dos factores">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <h1 class="sr-only">Configuración de autenticación de dos factores</h1>
 

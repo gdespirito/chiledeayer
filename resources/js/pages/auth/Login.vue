@@ -24,7 +24,9 @@ defineProps<{
         title="Inicia sesión en tu cuenta"
         description="Ingresa tu correo y contraseña para iniciar sesión"
     >
-        <Head title="Iniciar sesión" />
+        <Head title="Iniciar sesión">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <div
             v-if="status"
