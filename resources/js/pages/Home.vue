@@ -174,7 +174,7 @@ const exploreLinks = [
 
             <!-- Photo of the Day -->
             <section v-if="props.photoOfTheDay" class="px-4 pb-12 lg:px-8">
-                <div class="mx-auto max-w-6xl">
+                <div class="mx-auto max-w-4xl">
                     <div class="mb-6 flex items-center gap-2">
                         <Star class="size-5 text-amber-500" />
                         <h2 class="text-2xl font-semibold tracking-tight">
@@ -186,7 +186,7 @@ const exploreLinks = [
                         class="group block overflow-hidden rounded-2xl border border-sidebar-border/70 bg-card shadow-sm transition-shadow hover:shadow-lg dark:border-sidebar-border"
                     >
                         <div
-                            class="relative aspect-[21/9] overflow-hidden bg-muted"
+                            class="relative aspect-[3/1] overflow-hidden bg-muted"
                         >
                             <img
                                 v-if="getThumbnail(props.photoOfTheDay.data)"
