@@ -14,6 +14,7 @@ import {
     ThumbsUp,
     Trash2,
     User,
+    X,
 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
@@ -315,6 +316,9 @@ const osmEmbedUrl = computed(() => {
     return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${place.latitude},${place.longitude}`;
 });
 
+// Lightbox
+const lightboxOpen = ref(false);
+
 const googleMapsUrl = computed(() => {
     const place = photo.value.place;
     if (!place?.latitude || !place?.longitude) return null;
@@ -368,7 +372,8 @@ function getUserInitials(name: string): string {
                             v-if="getDisplayImage(photo)"
                             :src="getDisplayImage(photo)!"
                             :alt="photo.title"
-                            class="w-full object-contain"
+                            class="w-full cursor-zoom-in object-contain"
+                            @click="lightboxOpen = true"
                         />
                         <div
                             v-else
@@ -903,5 +908,35 @@ function getUserInitials(name: string): string {
                 </p>
             </div>
         </div>
+        <!-- Lightbox -->
+        <Teleport to="body">
+            <Transition
+                enter-active-class="transition duration-200"
+                enter-from-class="opacity-0"
+                enter-to-class="opacity-100"
+                leave-active-class="transition duration-150"
+                leave-from-class="opacity-100"
+                leave-to-class="opacity-0"
+            >
+                <div
+                    v-if="lightboxOpen && getDisplayImage(photo)"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+                    @click.self="lightboxOpen = false"
+                >
+                    <button
+                        class="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
+                        @click="lightboxOpen = false"
+                    >
+                        <X class="size-6" />
+                    </button>
+                    <img
+                        :src="getDisplayImage(photo)!"
+                        :alt="photo.title"
+                        class="max-h-[90vh] max-w-[90vw] cursor-zoom-out object-contain"
+                        @click="lightboxOpen = false"
+                    />
+                </div>
+            </Transition>
+        </Teleport>
     </AppLayout>
 </template>
