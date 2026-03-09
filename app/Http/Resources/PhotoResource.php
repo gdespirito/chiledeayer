@@ -41,6 +41,8 @@ class PhotoResource extends JsonResource
                     ->where('user_id', $request->user()?->id)
                     ->first()?->value,
             ),
+            'comments_count' => $this->when($this->comments_count !== null, $this->comments_count),
+            'tags_count' => $this->when($this->tags_count !== null, $this->tags_count),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

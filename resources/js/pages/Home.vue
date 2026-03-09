@@ -6,6 +6,7 @@ import {
     Heart,
     Map,
     MapPin,
+    MessageCircle,
     Search,
     Star,
     Tag,
@@ -49,6 +50,38 @@ function getThumbnail(photo: Photo): string | null {
     const thumb = photo.files.find((f) => f.variant === 'thumb');
 
     return medium?.url ?? original?.url ?? thumb?.url ?? null;
+}
+
+type HelpNeeded = {
+    label: string;
+    icon: typeof MapPin;
+    color: string;
+};
+
+function getHelpNeeded(photo: Photo): HelpNeeded[] {
+    const needs: HelpNeeded[] = [];
+    if (!photo.place) {
+        needs.push({
+            label: 'Necesita ubicación',
+            icon: MapPin,
+            color: 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/30',
+        });
+    }
+    if (photo.tags_count !== undefined && photo.tags_count === 0) {
+        needs.push({
+            label: 'Necesita etiquetas',
+            icon: Tag,
+            color: 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-950/30',
+        });
+    }
+    if (photo.comments_count !== undefined && photo.comments_count === 0) {
+        needs.push({
+            label: 'Sin comentarios',
+            icon: MessageCircle,
+            color: 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-950/30',
+        });
+    }
+    return needs;
 }
 
 const exploreLinks = [
@@ -333,11 +366,42 @@ const exploreLinks = [
                     <div
                         class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
                     >
-                        <PhotoCard
+                        <Link
                             v-for="photo in props.needsHelp.data"
                             :key="photo.id"
-                            :photo="photo"
-                        />
+                            :href="`/photos/${photo.id}`"
+                            class="group overflow-hidden rounded-xl border border-sidebar-border/70 bg-card shadow-sm transition-shadow hover:shadow-md dark:border-sidebar-border"
+                        >
+                            <div
+                                class="relative aspect-[4/3] overflow-hidden bg-muted"
+                            >
+                                <img
+                                    v-if="getThumbnail(photo)"
+                                    :src="getThumbnail(photo)!"
+                                    :alt="photo.description"
+                                    class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                />
+                            </div>
+                            <div class="space-y-2 p-4">
+                                <p class="line-clamp-2 text-sm font-medium">
+                                    {{ photo.description }}
+                                </p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span
+                                        v-for="need in getHelpNeeded(photo)"
+                                        :key="need.label"
+                                        class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
+                                        :class="need.color"
+                                    >
+                                        <component
+                                            :is="need.icon"
+                                            class="size-3"
+                                        />
+                                        {{ need.label }}
+                                    </span>
+                                </div>
+                            </div>
+                        </Link>
                     </div>
                 </div>
             </section>
