@@ -20,10 +20,11 @@ import { store as comparisonsStore } from '@/routes/photos/comparisons';
 import type { BreadcrumbItem, ComparisonPhoto, Photo } from '@/types';
 
 type Props = {
-    photo: Photo;
+    photo: { data: Photo };
 };
 
 const props = defineProps<Props>();
+const photo = computed(() => props.photo.data);
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
@@ -35,10 +36,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title:
-            props.photo.description.length > 40
-                ? props.photo.description.substring(0, 40) + '...'
-                : props.photo.description,
-        href: photosShow(props.photo.id),
+            photo.value.description.length > 40
+                ? photo.value.description.substring(0, 40) + '...'
+                : photo.value.description,
+        href: photosShow(photo.value.id),
     },
 ];
 
@@ -63,7 +64,7 @@ function onComparisonFileChange(event: Event): void {
 }
 
 function submitComparison(): void {
-    comparisonForm.post(comparisonsStore.url(props.photo.id), {
+    comparisonForm.post(comparisonsStore.url(photo.value.id), {
         forceFormData: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -118,35 +119,35 @@ function formatPrecisionLabel(precision: Photo['date_precision']): string {
     }
 }
 
-const yearDisplay = computed(() => formatDateRange(props.photo));
+const yearDisplay = computed(() => formatDateRange(photo.value));
 
 const ogTitle = computed(() => {
-    const desc = props.photo.description;
+    const desc = photo.value.description;
 
     return desc.length > 70 ? desc.substring(0, 67) + '...' : desc;
 });
 
 const ogDescription = computed(
-    () => `${props.photo.description} (${yearDisplay.value})`,
+    () => `${photo.value.description} (${yearDisplay.value})`,
 );
 
 const ogImage = computed(() => {
-    const medium = props.photo.files.find((f) => f.variant === 'medium');
-    const original = props.photo.files.find((f) => f.variant === 'original');
+    const medium = photo.value.files.find((f) => f.variant === 'medium');
+    const original = photo.value.files.find((f) => f.variant === 'original');
 
     return medium?.url ?? original?.url ?? null;
 });
 
 const hasComparisons = computed(
-    () => props.photo.comparisons && props.photo.comparisons.length > 0,
+    () => photo.value.comparisons && photo.value.comparisons.length > 0,
 );
 
 const userHasComparison = computed(() => {
-    if (!auth.value?.user || !props.photo.comparisons) {
+    if (!auth.value?.user || !photo.value.comparisons) {
         return false;
     }
 
-    return props.photo.comparisons.some(
+    return photo.value.comparisons.some(
         (c) => c.user.id === auth.value.user.id,
     );
 });
@@ -169,9 +170,9 @@ const userHasComparison = computed(() => {
                         class="overflow-hidden rounded-xl border border-sidebar-border/70 bg-muted dark:border-sidebar-border"
                     >
                         <img
-                            v-if="getDisplayImage(props.photo)"
-                            :src="getDisplayImage(props.photo)!"
-                            :alt="props.photo.description"
+                            v-if="getDisplayImage(photo)"
+                            :src="getDisplayImage(photo)!"
+                            :alt="photo.description"
                             class="w-full object-contain"
                         />
                         <div
@@ -190,7 +191,7 @@ const userHasComparison = computed(() => {
                     <!-- Description -->
                     <div>
                         <h1 class="text-xl font-semibold tracking-tight">
-                            {{ props.photo.description }}
+                            {{ photo.description }}
                         </h1>
                     </div>
 
@@ -203,19 +204,17 @@ const userHasComparison = computed(() => {
                             Fecha
                         </div>
                         <p class="text-sm text-muted-foreground">
-                            {{ formatDateRange(props.photo) }}
+                            {{ formatDateRange(photo) }}
                             <span class="text-xs">
                                 ({{
-                                    formatPrecisionLabel(
-                                        props.photo.date_precision,
-                                    )
+                                    formatPrecisionLabel(photo.date_precision)
                                 }})
                             </span>
                         </p>
                     </div>
 
                     <!-- Place -->
-                    <div v-if="props.photo.place" class="space-y-1">
+                    <div v-if="photo.place" class="space-y-1">
                         <div
                             class="flex items-center gap-2 text-sm font-medium"
                         >
@@ -223,20 +222,17 @@ const userHasComparison = computed(() => {
                             Lugar
                         </div>
                         <p class="text-sm text-muted-foreground">
-                            {{ props.photo.place.name }}
+                            {{ photo.place.name }}
                             <template
-                                v-if="
-                                    props.photo.place.city ||
-                                    props.photo.place.region
-                                "
+                                v-if="photo.place.city || photo.place.region"
                             >
                                 <br />
                                 <span class="text-xs">
                                     {{
                                         [
-                                            props.photo.place.city,
-                                            props.photo.place.region,
-                                            props.photo.place.country,
+                                            photo.place.city,
+                                            photo.place.region,
+                                            photo.place.country,
                                         ]
                                             .filter(Boolean)
                                             .join(', ')
@@ -247,7 +243,7 @@ const userHasComparison = computed(() => {
                     </div>
 
                     <!-- Tags -->
-                    <div v-if="props.photo.tags.length > 0" class="space-y-2">
+                    <div v-if="photo.tags.length > 0" class="space-y-2">
                         <div
                             class="flex items-center gap-2 text-sm font-medium"
                         >
@@ -256,7 +252,7 @@ const userHasComparison = computed(() => {
                         </div>
                         <div class="flex flex-wrap gap-1.5">
                             <Badge
-                                v-for="tag in props.photo.tags"
+                                v-for="tag in photo.tags"
                                 :key="tag.id"
                                 variant="secondary"
                             >
@@ -266,7 +262,7 @@ const userHasComparison = computed(() => {
                     </div>
 
                     <!-- Source/Credit -->
-                    <div v-if="props.photo.source_credit" class="space-y-1">
+                    <div v-if="photo.source_credit" class="space-y-1">
                         <div
                             class="flex items-center gap-2 text-sm font-medium"
                         >
@@ -274,7 +270,7 @@ const userHasComparison = computed(() => {
                             Fuente / Credito
                         </div>
                         <p class="text-sm text-muted-foreground">
-                            {{ props.photo.source_credit }}
+                            {{ photo.source_credit }}
                         </p>
                     </div>
 
@@ -287,7 +283,7 @@ const userHasComparison = computed(() => {
                             Subida por
                         </div>
                         <p class="text-sm text-muted-foreground">
-                            {{ props.photo.user.name }}
+                            {{ photo.user.name }}
                         </p>
                     </div>
 
@@ -382,7 +378,7 @@ const userHasComparison = computed(() => {
                 <h2 class="text-lg font-semibold">Foto del ahora</h2>
 
                 <div
-                    v-for="comparison in props.photo.comparisons"
+                    v-for="comparison in photo.comparisons"
                     :key="comparison.id"
                     class="overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
                 >
@@ -393,9 +389,9 @@ const userHasComparison = computed(() => {
                                 <Badge variant="secondary"> Antes </Badge>
                             </div>
                             <img
-                                v-if="getDisplayImage(props.photo)"
-                                :src="getDisplayImage(props.photo)!"
-                                :alt="props.photo.description"
+                                v-if="getDisplayImage(photo)"
+                                :src="getDisplayImage(photo)!"
+                                :alt="photo.description"
                                 class="h-full w-full object-cover"
                             />
                         </div>
