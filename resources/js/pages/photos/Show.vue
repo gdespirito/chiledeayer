@@ -932,7 +932,7 @@ function getUserInitials(name: string): string {
 
             <!-- Guest registration banner -->
             <div
-                v-if="!auth?.user"
+                v-if="!auth?.user && (comments.length > 0 || hasComparisons)"
                 class="flex items-center justify-between rounded-xl border border-dashed p-4"
             >
                 <p class="text-sm text-muted-foreground">
