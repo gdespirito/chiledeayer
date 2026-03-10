@@ -109,7 +109,9 @@ class PhotoController extends Controller
             'revisions' => RevisionResource::collection($photo->revisions->sortByDesc('created_at')),
         ])->withViewData([
             'ogImage' => $ogImage,
-            'ogTitle' => $photo->title,
+            'ogTitle' => Str::limit($photo->title, 70),
+            'ogDescription' => $photo->title.($photo->year_from ? " ({$photo->year_from})" : ''),
+            'ogType' => 'article',
         ]);
     }
 }
