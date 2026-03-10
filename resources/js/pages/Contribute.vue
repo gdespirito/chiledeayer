@@ -39,7 +39,7 @@ const howToSchema = {
     '@type': 'HowTo',
     name: 'Cómo contribuir al Chile de Ayer',
     description:
-        'Guía para contribuir al archivo fotográfico histórico de Chile. Sube fotografías históricas, identifica lugares, etiqueta y ayuda a preservar la memoria visual.',
+        'Guía para contribuir al archivo fotográfico histórico de Chile. Sube fotos históricas, identifica lugares, etiqueta y ayuda a preservar la memoria visual.',
     step: steps.map((s, i) => ({
         '@type': 'HowToStep',
         position: i + 1,
@@ -53,7 +53,7 @@ const howToSchema = {
         <meta
             head-key="description"
             name="description"
-            content="Contribuye al Chile de Ayer. Sube fotografías históricas, identifica lugares, etiqueta y ayuda a preservar la memoria visual de Chile."
+            content="Contribuye al Chile de Ayer. Sube fotos históricas, identifica lugares, etiqueta y ayuda a preservar la memoria visual de Chile."
         />
         <meta property="og:title" content="Contribuir — Chile de Ayer" />
         <meta
@@ -150,7 +150,7 @@ const howToSchema = {
                         <h2
                             class="mb-3 text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100"
                         >
-                            Sube fotografías históricas
+                            Sube fotos históricas
                         </h2>
                         <p
                             class="mb-4 leading-relaxed text-stone-600 dark:text-stone-400"
