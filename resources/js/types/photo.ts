@@ -68,6 +68,7 @@ export type ComparisonPhoto = {
 export type Photo = {
     id: number;
     title: string;
+    description: string | null;
     year_from: number;
     year_to: number | null;
     date_precision: 'exact' | 'year' | 'decade' | 'circa';

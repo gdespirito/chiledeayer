@@ -146,9 +146,15 @@ const ogTitle = computed(() => {
     return t.length > 70 ? t.substring(0, 67) + '...' : t;
 });
 
-const ogDescription = computed(
-    () => `${photo.value.title} (${yearDisplay.value})`,
-);
+const ogDescription = computed(() => {
+    if (photo.value.description) {
+        return photo.value.description.length > 200
+            ? photo.value.description.substring(0, 197) + '...'
+            : photo.value.description;
+    }
+
+    return `${photo.value.title} (${yearDisplay.value})`;
+});
 
 const ogImage = computed(() => {
     const medium = photo.value.files.find((f) => f.variant === 'medium');
@@ -162,7 +168,7 @@ const photographSchema = computed(() => {
         '@context': 'https://schema.org',
         '@type': 'Photograph',
         name: photo.value.title,
-        description: ogDescription.value,
+        description: photo.value.description ?? ogDescription.value,
         dateCreated: String(photo.value.year_from),
         image: ogImage.value,
         author: {
@@ -394,6 +400,12 @@ function getUserInitials(name: string): string {
                         <h1 class="text-xl font-semibold tracking-tight">
                             {{ photo.title }}
                         </h1>
+                        <p
+                            v-if="photo.description"
+                            class="mt-1.5 text-sm text-muted-foreground"
+                        >
+                            {{ photo.description }}
+                        </p>
                     </div>
 
                     <!-- Voting -->

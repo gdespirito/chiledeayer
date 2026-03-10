@@ -17,6 +17,7 @@ class PhotoResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'description' => $this->description,
             'year_from' => $this->year_from,
             'year_to' => $this->year_to,
             'date_precision' => $this->date_precision,

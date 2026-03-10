@@ -26,6 +26,7 @@ class StorePhotoRequest extends FormRequest
         return [
             'photo' => ['required', File::image()->max(20 * 1024)],
             'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:5000'],
             'year_from' => ['required', 'integer', 'min:1800', 'max:'.date('Y')],
             'year_to' => ['nullable', 'integer', 'min:1800', 'max:'.date('Y'), 'gte:year_from'],
             'date_precision' => ['required', 'string', 'in:exact,year,decade,circa'],
